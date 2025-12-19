@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Neon Dash</title>
+  <style>
+    html, body { margin:0; height:100%; background:#070A12; overflow:hidden; font-family:system-ui,Segoe UI,Arial; }
+    body { display:grid; place-items:center; }
+    #wrap { display:grid; gap:10px; place-items:center; padding:14px; }
+    canvas {
+      width:min(1200px, 96vw);
+      aspect-ratio: 16 / 9;
+      height:auto;
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,0.12);
+      box-shadow:0 30px 90px rgba(0,0,0,0.65);
+      background:#070A12;
+      image-rendering:pixelated;
+    }
+    #hint { font-size:14px; color:rgba(255,255,255,0.78); text-align:center; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <canvas id="game" width="1280" height="720"></canvas>
+    <div id="hint">Controls: <b>Space</b>/<b>↑</b>/<b>Click</b> = Jump • <b>R</b> Restart • <b>Esc</b> Menu</div>
+  </div>
+
+  <script>
+  // ===== Neon Dash - no localStorage, no Jekyll, single file =====
+  (() => {
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+
+    const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+    const lerp=(a,b,t)=>a+(b-a)*t;
+
+    const SPEED = 4.2;          // faster feel
+    const ceilingY = 70;
+    const groundY  = Math.floor(H*0.82);
+
+    // player
+    const p = { x: Math.floor(W*0.22), y: 0, w: 46, h: 46, vy: 0, rot: 0, onGround: true };
+
+    // level progress
+    let levelLen = 9000;
+    let dist = 0;
+
+    // objects
+    const objs = [];
+
+    // --- make levels NOT connected: each has its own pattern generator ---
+    const LEVELS = [
+      { name: "LEVEL 1 — EASY",   theme: ["#0A1022","#050611","rgba(0,255,190,1)"], make: makeEasy },
+      { name: "LEVEL 2 — MEDIUM", theme: ["#1A0D22","#070312","rgba(170,120,255,1)"], make: makeMedium },
+      { name: "LEVEL 3 — HARD",   theme: ["#201006","#080409","rgba(255,120,200,1)"], make: makeHard },
+    ];
+    let levelIndex = 0;
+
+    // menu
+    let inMenu = true;
+    let dead = false;
+    let won = false;
+
+    // physics
+    const grav = 0.62;
+    const jumpVel = -9.3;
+    const maxFall = 17;
+
+    function roundRect(x,y,w,h,r){
+      const rr=Math.min(r,w/2,h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+rr,y);
+      ctx.arcTo(x+w,y,x+w,y+h,rr);
+      ctx.arcTo(x+w,y+h,x,y+h,rr);
+      ctx.arcTo(x,y+h,x,y,rr);
+      ctx.arcTo(x,y,x+w,y,rr);
+      ctx.closePath();
+    }
+
+    function rects(ax,ay,aw,ah,bx,by,bw,bh){
+      return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;
+    }
+
+    function resetRun(){
+      dead=false; won=false;
+      dist=0;
+      objs.length=0;
+      p.y = groundY - p.h;
+      p.vy = 0;
+      p.rot = 0;
+      p.onGround = true;
+
+      // build a brand-new level layout each time
+      LEVELS[levelIndex].make(objs);
+    }
+
+    function startLevel(i){
+      levelIndex = i;
+      inMenu = false;
+      resetRun();
+    }
+
+    function backToMenu(){
+      inMenu = true;
+      dead=false; won=false;
+    }
+
+    // ===== level generators (more unique: moving blocks + up/down stuff) =====
+    function makeEasy(list){
+      levelLen = 8500;
+      // gentle intro + moving blocks
+      for(let t=900;t<levelLen;t+=700){
+        list.push({type:"spike", t, w:44, h:44});
+      }
+      for(let t=1400;t<levelLen;t+=1600){
+        list.push({type:"blockMove", t, w:110, h:70, amp:80, spd:0.012, phase:Math.random()*10});
+      }
+      // some raised platforms
+      for(let t=2200;t<levelLen;t+=1800){
+        list.push({type:"block", t, w:140, h:60, yOff:-120});
+      }
+    }
+
+    function makeMedium(list){
+      levelLen = 9500;
+      // tighter spikes + more vertical motion
+      for(let t=800;t<levelLen;t+=520){
+        list.push({type:"spike", t, w:44, h:44});
+        if(t%1040===0) list.push({type:"spikeTop", t:t+260, w:44, h:44});
+      }
+      for(let t=1600;t<levelLen;t+=1400){
+        list.push({type:"blockMove", t, w:120, h:75, amp:120, spd:0.016, phase:Math.random()*10});
+      }
+      for(let t=2600;t<levelLen;t+=2000){
+        list.push({type:"block", t, w:160, h:60, yOff:-170});
+      }
+    }
+
+    function makeHard(list){
+      levelLen = 11000;
+      // denser hazards + moving blocks + top spikes
+      for(let t=650;t<levelLen;t+=420){
+        list.push({type:"spike", t, w:44, h:44});
+        if(t%840===0) list.push({type:"spikeTop", t:t+210, w:44, h:44});
+      }
+      for(let t=1300;t<levelLen;t+=1100){
+        list.push({type:"blockMove", t, w:130, h:80, amp:150, spd:0.020, phase:Math.random()*10});
+      }
+      for(let t=2400;t<levelLen;t+=1600){
+        list.push({type:"block", t, w:170, h:65, yOff:-200});
+      }
+    }
+
+    // ===== input =====
+    function jump(){
+      if(inMenu) return;
+      if(dead||won){ resetRun(); return; }
+      if(p.onGround){
+        p.vy = jumpVel;
+        p.onGround=false;
+      }
+    }
+    window.addEventListener("keydown",(e)=>{
+      if(e.code==="Escape"){ backToMenu(); return; }
+      if(inMenu){
+        if(e.code==="Digit1") startLevel(0);
+        if(e.code==="Digit2") startLevel(1);
+        if(e.code==="Digit3") startLevel(2);
+        return;
+      }
+      if(e.code==="Space"||e.code==="ArrowUp") jump();
+      if(e.code==="KeyR") resetRun();
+    });
+    window.addEventListener("mousedown", ()=> jump());
+
+    // ===== update/draw =====
+    function update(){
+      if(inMenu || dead || won) return;
+
+      dist += SPEED;
+
+      // physics
+      p.vy += grav;
+      p.vy = clamp(p.vy, -30, maxFall);
+      p.y += p.vy;
+
+      if(p.y+p.h>=groundY){ p.y=groundY-p.h; p.vy=0; p.onGround=true; }
+      if(p.y<=ceilingY){ dead=true; }
+
+      if(!p.onGround) p.rot += 0.12;
+      else{
+        const q=Math.PI/2;
+        const target=Math.round(p.rot/q)*q;
+        p.rot = lerp(p.rot,target,0.32);
+      }
+
+      // win
+      if(dist >= levelLen){ won=true; }
+
+      // collisions
+      const pb = { x:p.x+8, y:p.y+8, w:p.w-16, h:p.h-16 };
+
+      for(const o of objs){
+        const ox = W + 220 + (o.t - dist);
+        if(ox < -260 || ox > W+400) continue;
+
+        if(o.type==="spike"){
+          const sy = groundY;
+          if(rects(pb.x,pb.y,pb.w,pb.h, ox, sy-o.h, o.w, o.h)) dead=true;
+        }
+        if(o.type==="spikeTop"){
+          const sy = ceilingY;
+          if(rects(pb.x,pb.y,pb.w,pb.h, ox, sy, o.w, o.h)) dead=true;
+        }
+        if(o.type==="block"){
+          const by = groundY - o.h + (o.yOff||0);
+          if(rects(pb.x,pb.y,pb.w,pb.h, ox, by, o.w, o.h)){
+            // land on top if coming down
+            const prevY = pb.y - p.vy;
+            if(prevY + pb.h <= by + 8 && p.vy>=0){
+              p.y = by - p.h;
+              p.vy = 0;
+              p.onGround=true;
+            }else dead=true;
+          }
+        }
+        if(o.type==="blockMove"){
+          const baseY = groundY - o.h;
+          const by = baseY - Math.sin((dist*o.spd)+o.phase) * o.amp;
+          if(rects(pb.x,pb.y,pb.w,pb.h, ox, by, o.w, o.h)){
+            const prevY = pb.y - p.vy;
+            if(prevY + pb.h <= by + 8 && p.vy>=0){
+              p.y = by - p.h;
+              p.vy = 0;
+              p.onGround=true;
+            }else dead=true;
+          }
+        }
+      }
+    }
+
+    function draw(){
+      const [top,bot,accent]=LEVELS[levelIndex].theme;
+
+      // bg
+      const g = ctx.createLinearGradient(0,0,0,H);
+      g.addColorStop(0,top); g.addColorStop(1,bot);
+      ctx.fillStyle=g;
+      ctx.fillRect(0,0,W,H);
+
+      // lines
+      ctx.globalAlpha=0.25;
+      ctx.strokeStyle=accent;
+      ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(0,groundY+1); ctx.lineTo(W,groundY+1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0,ceilingY); ctx.lineTo(W,ceilingY); ctx.stroke();
+      ctx.globalAlpha=1;
+
+      // progress bar + percent
+      const pct = clamp(dist/levelLen,0,1);
+      const barW=360, barH=12, bx=W-barW-18, by=18;
+      ctx.fillStyle="rgba(255,255,255,0.12)";
+      roundRect(bx,by,barW,barH,10); ctx.fill();
+      ctx.fillStyle=accent;
+      roundRect(bx,by,Math.max(10,barW*pct),barH,10); ctx.fill();
+      ctx.fillStyle="rgba(255,255,255,0.92)";
+      ctx.font="16px system-ui,Segoe UI,Arial";
+      ctx.textAlign="right";
+      ctx.fillText(`${Math.floor(pct*100)}%`, W-18, 56);
+      ctx.textAlign="left";
+
+      // title
+      ctx.fillStyle="rgba(255,255,255,0.92)";
+      ctx.font="18px system-ui,Segoe UI,Arial";
+      ctx.fillText(`${LEVELS[levelIndex].name}  •  Speed: ${SPEED.toFixed(1)}`, 18, 32);
+
+      // objects
+      for(const o of objs){
+        const ox = W + 220 + (o.t - dist);
+        if(ox < -260 || ox > W+400) continue;
+
+        if(o.type==="spike" || o.type==="spikeTop"){
+          const baseY = (o.type==="spike") ? groundY : ceilingY;
+          const tipY  = (o.type==="spike") ? baseY - o.h : baseY + o.h;
+          ctx.save();
+          ctx.shadowColor="rgba(255,80,130,1)";
+          ctx.shadowBlur=18;
+          ctx.fillStyle="rgba(255,80,130,0.95)";
+          ctx.beginPath();
+          ctx.moveTo(ox, baseY);
+          ctx.lineTo(ox+o.w/2, tipY);
+          ctx.lineTo(ox+o.w, baseY);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
+        }
+
+        if(o.type==="block"){
+          const by = groundY - o.h + (o.yOff||0);
+          ctx.save();
+          ctx.shadowColor="rgba(90,160,255,1)";
+          ctx.shadowBlur=18;
+          ctx.fillStyle="rgba(120,190,255,0.88)";
+          roundRect(ox,by,o.w,o.h,12); ctx.fill();
+          ctx.restore();
+        }
+
+        if(o.type==="blockMove"){
+          const baseY = groundY - o.h;
+          const by = baseY - Math.sin((dist*o.spd)+o.phase) * o.amp;
+          ctx.save();
+          ctx.shadowColor="rgba(255,220,90,1)";
+          ctx.shadowBlur=18;
+          ctx.fillStyle="rgba(255,220,90,0.92)";
+          roundRect(ox,by,o.w,o.h,12); ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      // player
+      ctx.save();
+      const cx=p.x+p.w/2, cy=p.y+p.h/2;
+      ctx.translate(cx,cy);
+      ctx.rotate(p.rot);
+      ctx.shadowColor="rgba(0,255,190,1)";
+      ctx.shadowBlur=26;
+      ctx.fillStyle="rgba(0,255,190,0.95)";
+      ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+      ctx.restore();
+
+      // menu overlay
+      if(inMenu){
+        ctx.fillStyle="rgba(0,0,0,0.62)";
+        ctx.fillRect(0,0,W,H);
+        ctx.fillStyle="rgba(255,255,255,0.95)";
+        ctx.textAlign="center";
+        ctx.font="44px system-ui,Segoe UI,Arial";
+        ctx.fillText("NEON DASH", W/2, H/2 - 70);
+        ctx.font="18px system-ui,Segoe UI,Arial";
+        ctx.fillStyle="rgba(255,255,255,0.80)";
+        ctx.fillText("Press 1 / 2 / 3 to start a level", W/2, H/2 - 15);
+        ctx.fillText("Space/Click = Jump • R = Restart • Esc = Menu", W/2, H/2 + 18);
+        ctx.textAlign="left";
+      }
+
+      if(dead || won){
+        ctx.fillStyle="rgba(0,0,0,0.55)";
+        ctx.fillRect(0,0,W,H);
+        ctx.textAlign="center";
+        ctx.fillStyle="rgba(255,255,255,0.95)";
+        ctx.font="40px system-ui,Segoe UI,Arial";
+        ctx.fillText(won ? "LEVEL COMPLETE!" : "CRASHED!", W/2, H/2 - 10);
+        ctx.font="18px system-ui,Segoe UI,Arial";
+        ctx.fillStyle="rgba(255,255,255,0.80)";
+        ctx.fillText(`Progress: ${Math.floor(clamp(dist/levelLen,0,1)*100)}%`, W/2, H/2 + 28);
+        ctx.fillText("Space/Click = Restart • Esc = Menu", W/2, H/2 + 56);
+        ctx.textAlign="left";
+      }
+    }
+
+    function loop(){
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+
+    // start at menu
+    backToMenu();
+    loop();
+  })();
+  </script>
+</body>
+</html>
