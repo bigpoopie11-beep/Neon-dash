@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Neon Dash</title>
+<style>
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: #070A12;
+    overflow: hidden;
+    font-family: system-ui, Arial;
+  }
+  canvas { display: block; margin: auto; }
+</style>
+</head>
+<body>
+
+<canvas id="game" width="960" height="540"></canvas>
+
+<script>
+(() => {
+/* ================= BASIC SETUP ================= */
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+const W = canvas.width, H = canvas.height;
+const groundY = Math.floor(H * 0.8);
+const SPEED = 3.6;
+
+let state = "menu"; // menu | play | dead | win
+let levelKey = "easy";
+let dist = 0;
+
+/* ================= PLAYER ================= */
+const player = {
+  x: 200, y: groundY - 40, w: 40, h: 40,
+  vy: 0, onGround: true, rot: 0, mode: "cube"
+};
+
+const gravity = 0.6;
+const jumpVel = -9;
+
+/* ================= LEVELS ================= */
+const LEVELS = {
+  easy: {
+    len: 7000,
+    bg: ["#0A1022", "#050611"],
+    obs: [
+      {t:800, type:"spike"},
+      {t:1400, type:"spike"},
+      {t:2000, type:"pad"},
+      {t:2600, type:"block", move:true},
+      {t:3400, type:"portal"},
+      {t:4200, type:"ufoOrb"},
+      {t:5200, type:"portal"},
+      {t:6000, type:"spike"},
+    ]
+  },
+  medium: {
+    len: 8200,
+    bg: ["#1A0D22", "#070312"],
+    obs: [
+      {t:700, type:"spike"},
+      {t:1200, type:"block"},
+      {t:1800, type:"pad"},
+      {t:2400, type:"block", move:true},
+      {t:3200, type:"spike"},
+      {t:3800, type:"portal"},
+      {t:4600, type:"ufoOrb"},
+      {t:5200, type:"ufoOrb"},
+      {t:6400, type:"portal"},
+      {t:7200, type:"spike"},
+    ]
+  },
+  hard: {
+    len: 9000,
+    bg: ["#201006", "#080409"],
+    obs: [
+      {t:600, type:"spike"},
+      {t:1000, type:"spike"},
+      {t:1600, type:"block", move:true},
+      {t:2200, type:"pad"},
+      {t:3000, type:"spike"},
+      {t:3600, type:"portal"},
+      {t:4300, type:"ufoOrb"},
+      {t:5000, type:"ufoOrb"},
+      {t:5700, type:"ufoOrb"},
+      {t:6800, type:"portal"},
+      {t:8200, type:"spike"},
+    ]
+  }
+};
+
+let obstacles = [];
+let spawnIndex = 0;
+
+/* ================= INPUT ================= */
+let hold = false;
+window.addEventListener("keydown", e => {
+  if (e.code === "Escape") state = "menu";
+  if (state !== "play") return;
+  if (e.code === "Space" && !hold) jump();
+  hold = true;
+});
+window.addEventListener("keyup", () => hold = false);
+canvas.addEventListener("mousedown", () => {
+  if (state === "play") jump();
+});
+
+/* ================= GAME FLOW ================= */
+function startLevel(k) {
+  levelKey = k;
+  state = "play";
+  dist = 0;
+  spawnIndex = 0;
+  obstacles = [];
+  player.y = groundY - player.h;
+  player.vy = 0;
+  player.mode = "cube";
+}
+
+function jump() {
+  if (player.mode === "cube" && player.onGround) {
+    player.vy = jumpVel;
+    player.onGround = false;
+  }
+  if (player.mode === "ufo") {
+    player.vy = jumpVel * 0.7;
+  }
+}
+
+/* ================= UPDATE ================= */
+function update() {
+  if (state !== "play") return;
+
+  dist += SPEED;
+  if (dist >= LEVELS[levelKey].len) state = "win";
+
+  // spawn obstacles
+  const L = LEVELS[levelKey];
+  while (spawnIndex < L.obs.length && dist + W > L.obs[spawnIndex].t) {
+    const o = {...L.obs[spawnIndex]};
+    o.x = W + 100;
+    o.y = groundY - 40;
+    o.baseY = o.y;
+    obstacles.push(o);
+    spawnIndex++;
+  }
+
+  // move obstacles
+  obstacles.forEach(o => {
+    o.x -= SPEED;
+    if (o.move) o.y = o.baseY + Math.sin(dist * 0.02) * 30;
+  });
+  obstacles = obstacles.filter(o => o.x > -100);
+
+  // physics
+  player.vy += gravity;
+  player.y += player.vy;
+
+  if (player.y + player.h >= groundY) {
+    player.y = groundY - player.h;
+    player.vy = 0;
+    player.onGround = true;
+  }
+
+  // collisions
+  for (const o of obstacles) {
+    if (o.type === "portal" && hit(o)) {
+      player.mode = player.mode === "cube" ? "ufo" : "cube";
+    }
+    if (o.type === "pad" && hit(o)) {
+      player.vy = jumpVel * 1.2;
+    }
+    if (o.type === "ufoOrb" && hit(o) && player.mode === "ufo") {
+      player.vy = jumpVel;
+    }
+    if (o.type === "spike" && hit(o)) state = "dead";
+    if (o.type === "block" && hit(o)) state = "dead";
+  }
+}
+
+function hit(o) {
+  return player.x < o.x+40 && player.x+40 > o.x &&
+         player.y < o.y+40 && player.y+40 > o.y;
+}
+
+/* ================= DRAW ================= */
+function draw() {
+  // background
+  const bg = LEVELS[levelKey]?.bg || ["#070A12","#070A12"];
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,bg[0]); g.addColorStop(1,bg[1]);
+  ctx.fillStyle = g;
+  ctx.fillRect(0,0,W,H);
+
+  // ground
+  ctx.strokeStyle = "#0ff";
+  ctx.beginPath();
+  ctx.moveTo(0,groundY);
+  ctx.lineTo(W,groundY);
+  ctx.stroke();
+
+  if (state === "menu") {
+    ctx.fillStyle="#fff";
+    ctx.font="40px Arial";
+    ctx.fillText("NEON DASH", W/2-140, 160);
+    ctx.font="22px Arial";
+    ctx.fillText("1 - Easy   2 - Medium   3 - Hard", W/2-190, 240);
+    return;
+  }
+
+  // obstacles
+  obstacles.forEach(o => {
+    ctx.fillStyle =
+      o.type==="spike"?"#f48":
+      o.type==="pad"?"#fd0":
+      o.type==="portal"?"#0ff":
+      o.type==="ufoOrb"?"#b7f":"#6cf";
+    ctx.fillRect(o.x,o.y,40,40);
+  });
+
+  // player
+  ctx.save();
+  ctx.translate(player.x+20,player.y+20);
+  ctx.rotate(player.rot);
+  ctx.fillStyle="#0f9";
+  ctx.fillRect(-20,-20,40,40);
+  ctx.restore();
+
+  // UI
+  const pct = Math.floor(dist/LEVELS[levelKey].len*100);
+  ctx.fillStyle="#fff";
+  ctx.font="16px Arial";
+  ctx.fillText(pct+"%", W-60, 30);
+
+  if (state==="dead"||state==="win") {
+    ctx.fillStyle="rgba(0,0,0,0.6)";
+    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle="#fff";
+    ctx.font="36px Arial";
+    ctx.fillText(state==="win"?"LEVEL COMPLETE":"CRASHED", W/2-120, H/2);
+    ctx.font="16px Arial";
+    ctx.fillText("ESC = Menu", W/2-50, H/2+30);
+  }
+}
+
+/* ================= LOOP ================= */
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+
+/* ================= MENU KEYS ================= */
+window.addEventListener("keydown", e => {
+  if (state==="menu") {
+    if (e.key==="1") startLevel("easy");
+    if (e.key==="2") startLevel("medium");
+    if (e.key==="3") startLevel("hard");
+  }
+});
+})();
+</script>
+
+</body>
+</html>
