@@ -3,25 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Neon Dash — GD Style</title>
+  <title>Neon Dash — GD Style (Fair)</title>
   <style>
     :root{
       --bg0:#050813;
       --bg1:#090b18;
       --panel: rgba(12,14,22,0.72);
-      --line: rgba(255,255,255,0.12);
       --txt: rgba(255,255,255,0.92);
       --muted: rgba(255,255,255,0.65);
       --good: rgba(0,255,190,1);
-      --warn: rgba(255,220,90,1);
-      --bad: rgba(255,80,130,1);
-      --blue: rgba(120,190,255,1);
-      --purple: rgba(170,120,255,1);
     }
-
     html, body {
-      margin: 0;
-      height: 100%;
+      margin: 0; height: 100%;
       background: radial-gradient(1200px 700px at 50% 0%, rgba(120,190,255,0.22), rgba(0,0,0,0.92)),
                   linear-gradient(180deg, var(--bg1), var(--bg0));
       overflow: hidden;
@@ -29,23 +22,8 @@
       user-select: none;
       touch-action: none;
     }
-
-    .wrap{
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      padding: 14px;
-      gap: 10px;
-    }
-
-    .hudHint{
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-      line-height: 1.3;
-    }
-
+    .wrap{ position: fixed; inset: 0; display:grid; place-items:center; padding:14px; gap:10px; }
+    .hudHint{ color: var(--muted); font-size: 13px; text-align:center; line-height:1.3; }
     canvas{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.14);
@@ -53,29 +31,22 @@
       background: #070A12;
       display:block;
     }
-
-    /* MENU */
     .overlay{
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
+      position: fixed; inset: 0; display:grid; place-items:center;
       background: radial-gradient(1100px 700px at 50% 0%, rgba(0,255,190,0.12), rgba(0,0,0,0.86));
       backdrop-filter: blur(8px);
     }
-
     .panel{
-      width: min(1100px, 96vw);
+      width: min(1180px, 96vw);
       border-radius: 22px;
       border: 1px solid rgba(255,255,255,0.16);
       background: var(--panel);
       box-shadow: 0 50px 160px rgba(0,0,0,0.75);
       overflow: hidden;
       display: grid;
-      grid-template-columns: 280px 1fr;
-      min-height: min(620px, 86vh);
+      grid-template-columns: 290px 1fr;
+      min-height: min(650px, 86vh);
     }
-
     .side{
       padding: 16px;
       display: grid;
@@ -83,35 +54,21 @@
       gap: 12px;
       border-right: 1px solid rgba(255,255,255,0.10);
     }
-
     .brand{
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      color: var(--txt);
-      font-size: 18px;
-      display:flex;
-      align-items:center;
-      gap:10px;
+      font-weight: 950; letter-spacing: 0.16em; color: rgba(255,255,255,0.92);
+      font-size: 18px; display:flex; align-items:center; gap:10px;
     }
-    .brandDot{
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--good);
-      box-shadow: 0 0 18px var(--good);
-    }
-
+    .brandDot{ width: 12px; height: 12px; border-radius: 50%; background: var(--good); box-shadow: 0 0 18px var(--good); }
     .tabBtn{
       cursor: pointer;
       padding: 12px 14px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.06);
-      color: var(--txt);
+      color: rgba(255,255,255,0.92);
       font-weight: 900;
       text-align: left;
-      display:flex;
-      justify-content: space-between;
-      align-items:center;
-      gap: 12px;
+      display:flex; justify-content: space-between; align-items:center; gap: 12px;
       transition: transform .08s ease, background .12s ease, border-color .12s ease;
     }
     .tabBtn:hover{ background: rgba(255,255,255,0.10); transform: translateY(-1px); }
@@ -121,92 +78,42 @@
       box-shadow: 0 0 0 2px rgba(0,255,190,0.14) inset;
     }
     .pill{
-      font-size: 12px;
-      color: rgba(255,255,255,0.85);
-      padding: 6px 10px;
-      border-radius: 999px;
+      font-size: 12px; color: rgba(255,255,255,0.85);
+      padding: 6px 10px; border-radius: 999px;
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.12);
     }
-
-    .content{
-      padding: 16px;
-      display:grid;
-      gap: 12px;
-      align-content: start;
-    }
-    .title{
-      font-weight: 950;
-      color: var(--txt);
-      letter-spacing: 0.06em;
-      font-size: 16px;
-    }
-
-    /* BIG LEVEL TABS */
-    .levelGrid{
-      display:grid;
-      gap: 12px;
-    }
+    .content{ padding: 16px; display:grid; gap: 12px; align-content:start; }
+    .title{ font-weight: 950; color: rgba(255,255,255,0.92); letter-spacing: 0.06em; font-size: 16px; }
+    .levelGrid{ display:grid; gap: 12px; }
     .levelTab{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.16);
       background: rgba(255,255,255,0.05);
       overflow: hidden;
       display:grid;
-      grid-template-columns: 1fr 210px;
+      grid-template-columns: 1fr 220px;
       min-height: 130px;
     }
-    .levelLeft{
-      padding: 14px;
-      display:grid;
-      gap: 8px;
-      align-content: center;
-    }
-    .levelName{
-      font-weight: 950;
-      color: var(--txt);
-      font-size: 18px;
-      letter-spacing: 0.08em;
-    }
-    .levelSub{
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.25;
-    }
-    .levelMeta{
-      display:flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items:center;
-    }
+    .levelLeft{ padding: 14px; display:grid; gap: 8px; align-content:center; }
+    .levelName{ font-weight: 950; color: rgba(255,255,255,0.92); font-size: 18px; letter-spacing: 0.08em; }
+    .levelSub{ color: rgba(255,255,255,0.65); font-size: 13px; line-height: 1.25; }
+    .levelMeta{ display:flex; gap: 8px; flex-wrap: wrap; align-items:center; }
     .playBtn{
       cursor:pointer;
       border: 1px solid rgba(0,255,190,0.35);
       background: rgba(0,255,190,0.14);
-      color: var(--txt);
+      color: rgba(255,255,255,0.92);
       font-weight: 950;
       padding: 12px 14px;
       border-radius: 16px;
       transition: transform .08s ease, background .12s ease;
+      width: max-content;
     }
     .playBtn:hover{ background: rgba(0,255,190,0.18); transform: translateY(-1px); }
+    .thumb{ border-left: 1px solid rgba(255,255,255,0.10); display:grid; place-items:center; padding: 12px; }
+    .thumb canvas{ width: 100%; height: 100%; max-height: 110px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.10); box-shadow:none; }
 
-    .thumb{
-      border-left: 1px solid rgba(255,255,255,0.10);
-      display:grid;
-      place-items:center;
-      padding: 12px;
-    }
-    .thumb canvas{
-      width: 100%;
-      height: 100%;
-      max-height: 110px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.10);
-      box-shadow: none;
-    }
-
-    /* SETTINGS UI */
     .box{
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.16);
@@ -215,67 +122,40 @@
       display:grid;
       gap: 12px;
     }
-    label{
-      color: rgba(255,255,255,0.80);
-      font-weight: 900;
-      font-size: 13px;
-    }
-    .row2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    label{ color: rgba(255,255,255,0.80); font-weight: 900; font-size: 13px; }
+    .row2{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     select, input{
       width: 100%;
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.05);
-      color: var(--txt);
+      color: rgba(255,255,255,0.92);
       outline: none;
       font-weight: 800;
     }
-    .btnRow{
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items:center;
-    }
+    .btnRow{ display:flex; gap: 10px; flex-wrap: wrap; align-items:center; }
     .smallBtn{
       cursor:pointer;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.06);
-      color: var(--txt);
+      color: rgba(255,255,255,0.92);
       font-weight: 900;
       padding: 10px 12px;
     }
     .smallBtn:hover{ background: rgba(255,255,255,0.10); }
-    .smallBtn.primary{
-      border-color: rgba(0,255,190,0.35);
-      background: rgba(0,255,190,0.14);
-    }
-
-    .tip{
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.35;
-    }
-
-    /* editor canvas */
-    .editorCanvas{
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(0,0,0,0.2);
-    }
+    .smallBtn.primary{ border-color: rgba(0,255,190,0.35); background: rgba(0,255,190,0.14); }
+    .tip{ color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.35; }
+    .editorCanvas{ width: 100%; border-radius: 16px; border: 1px solid rgba(255,255,255,0.12); background: rgba(0,0,0,0.2); }
   </style>
 </head>
 <body>
 <div class="wrap">
   <canvas id="game"></canvas>
   <div class="hudHint" id="hint">
-    Controls: <b>Space</b>/<b>↑</b>/<b>Click/Tap</b> = Jump/Flap • <b>R</b> Restart • <b>Esc</b> Menu
+    Controls: <b>Space</b>/<b>↑</b>/<b>Click/Tap</b> = Jump/Flap • <b>R</b> Restart • <b>Esc</b> Menu<br/>
+    Tip: Blue pads jump higher. Assist mode makes learning easier.
   </div>
 </div>
 
@@ -284,19 +164,13 @@
     <div class="side">
       <div class="brand"><span class="brandDot"></span>NEON DASH</div>
 
-      <button class="tabBtn active" id="tabLevels">
-        <span>Levels</span><span class="pill">Play</span>
-      </button>
-      <button class="tabBtn" id="tabCustomize">
-        <span>Customize</span><span class="pill">Skins</span>
-      </button>
-      <button class="tabBtn" id="tabCreator">
-        <span>Level Creator</span><span class="pill">Build</span>
-      </button>
+      <button class="tabBtn active" id="tabLevels"><span>Levels</span><span class="pill">Play</span></button>
+      <button class="tabBtn" id="tabCustomize"><span>Customize</span><span class="pill">Options</span></button>
+      <button class="tabBtn" id="tabCreator"><span>Level Creator</span><span class="pill">Build</span></button>
 
       <div class="tip">
-        Tip: <b>Esc</b> always returns here.<br/>
-        Your best % per level is saved (if storage is allowed).
+        Fair hitboxes + better difficulty curve.<br/>
+        <b>Esc</b> always returns here.
       </div>
     </div>
 
@@ -309,71 +183,48 @@
 
 <script>
 (() => {
-  // ===================== SAFE STORAGE (fixes SecurityError) =====================
+  // ===================== SAFE STORAGE (no SecurityError) =====================
   const memStore = {};
   const safeStorage = {
-    get(k, fallback=null){
-      try {
-        const v = localStorage.getItem(k);
-        return (v === null || v === undefined) ? fallback : v;
-      } catch {
-        return (k in memStore) ? memStore[k] : fallback;
-      }
-    },
-    set(k, v){
-      try { localStorage.setItem(k, String(v)); }
-      catch { memStore[k] = String(v); }
-    },
-    getJSON(k, fallback){
-      try {
-        const raw = safeStorage.get(k, null);
-        if (raw === null) return fallback;
-        return JSON.parse(raw);
-      } catch { return fallback; }
-    },
-    setJSON(k, obj){
-      try { safeStorage.set(k, JSON.stringify(obj)); }
-      catch { /* ignore */ }
-    }
+    get(k, fallback=null){ try{ const v=localStorage.getItem(k); return (v==null)?fallback:v; }catch{ return (k in memStore)?memStore[k]:fallback; } },
+    set(k, v){ try{ localStorage.setItem(k, String(v)); }catch{ memStore[k]=String(v); } },
+    getJSON(k, fallback){ try{ const raw=safeStorage.get(k,null); if(raw==null) return fallback; return JSON.parse(raw); }catch{ return fallback; } },
+    setJSON(k, obj){ try{ safeStorage.set(k, JSON.stringify(obj)); }catch{} }
   };
 
   // ===================== CANVAS + RESPONSIVE =====================
   const canvas = document.getElementById("game");
   const ctx = canvas.getContext("2d");
 
-  let CSSW = 0, CSSH = 0, DPR = 1;
+  let CSSW=0, CSSH=0, DPR=1;
   const ASPECT = 16/9;
 
-  function resize() {
-    const vw = Math.max(320, window.innerWidth);
-    const vh = Math.max(320, window.innerHeight);
-
-    // Make it BIG like GD on screen
-    const targetW = Math.min(1400, vw * 0.98);
-    const targetH = Math.min(vh * 0.78, targetW / ASPECT);
-
+  function resize(){
+    const vw = Math.max(320, innerWidth);
+    const vh = Math.max(320, innerHeight);
+    const targetW = Math.min(1500, vw * 0.985);
+    const targetH = Math.min(vh * 0.80, targetW / ASPECT);
     CSSW = Math.floor(targetW);
     CSSH = Math.floor(targetH);
-
-    DPR = Math.min(2, window.devicePixelRatio || 1);
-    canvas.style.width = CSSW + "px";
-    canvas.style.height = CSSH + "px";
+    DPR = Math.min(2, devicePixelRatio || 1);
+    canvas.style.width = CSSW+"px";
+    canvas.style.height = CSSH+"px";
     canvas.width = Math.floor(CSSW * DPR);
     canvas.height = Math.floor(CSSH * DPR);
     ctx.setTransform(DPR,0,0,DPR,0,0);
+    regenDecor();
   }
-  window.addEventListener("resize", resize);
+  addEventListener("resize", resize);
   resize();
 
-  function W(){ return CSSW; }
-  function H(){ return CSSH; }
+  const W=()=>CSSW, H=()=>CSSH;
 
   // ===================== HELPERS =====================
-  const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
-  const lerp = (a,b,t)=>a+(b-a)*t;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const lerp=(a,b,t)=>a+(b-a)*t;
 
   function rr(x,y,w,h,r){
-    const rad = Math.min(r, w/2, h/2);
+    const rad = Math.min(r,w/2,h/2);
     ctx.beginPath();
     ctx.moveTo(x+rad,y);
     ctx.arcTo(x+w,y,x+w,y+h,rad);
@@ -382,33 +233,30 @@
     ctx.arcTo(x,y,x+w,y,rad);
     ctx.closePath();
   }
-
-  function glow(drawFn, color, blur, alpha=1){
+  function glow(drawFn,color,blur,alpha=1){
     ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.shadowColor = color;
-    ctx.shadowBlur = blur;
+    ctx.globalAlpha=alpha;
+    ctx.shadowColor=color;
+    ctx.shadowBlur=blur;
     drawFn();
     ctx.restore();
   }
-
   function rectHit(ax,ay,aw,ah,bx,by,bw,bh){
     return ax < bx+bw && ax+aw > bx && ay < by+bh && ay+ah > by;
   }
-
   function circleRectHit(cx,cy,cr, rx,ry,rw,rh){
-    // closest point on rect to circle
-    const px = clamp(cx, rx, rx+rw);
-    const py = clamp(cy, ry, ry+rh);
-    const dx = cx - px, dy = cy - py;
-    return (dx*dx + dy*dy) <= cr*cr;
+    const px=clamp(cx,rx,rx+rw), py=clamp(cy,ry,ry+rh);
+    const dx=cx-px, dy=cy-py;
+    return dx*dx+dy*dy <= cr*cr;
   }
 
-  // ===================== THEME / COLORS =====================
+  // ===================== THEMES / COLORS =====================
   const THEMES = {
-    easy:   { top:"#0B1230", bot:"#050611", accent:"rgba(0,255,190,1)", grid:"rgba(0,255,190,0.10)", deco:"rgba(0,255,190,0.10)" },
-    medium: { top:"#1A0D2A", bot:"#070312", accent:"rgba(170,120,255,1)", grid:"rgba(170,120,255,0.12)", deco:"rgba(170,120,255,0.10)" },
-    hard:   { top:"#261018", bot:"#09040A", accent:"rgba(255,120,200,1)", grid:"rgba(255,120,200,0.12)", deco:"rgba(255,120,200,0.10)" },
+    neon:   { top:"#0B1230", bot:"#050611", accent:"rgba(0,255,190,1)", grid:"rgba(0,255,190,0.10)", deco:"rgba(0,255,190,0.10)" },
+    purple: { top:"#1A0D2A", bot:"#070312", accent:"rgba(170,120,255,1)", grid:"rgba(170,120,255,0.12)", deco:"rgba(170,120,255,0.10)" },
+    pink:   { top:"#261018", bot:"#09040A", accent:"rgba(255,120,200,1)", grid:"rgba(255,120,200,0.12)", deco:"rgba(255,120,200,0.10)" },
+    blue:   { top:"#081828", bot:"#040810", accent:"rgba(120,190,255,1)", grid:"rgba(120,190,255,0.12)", deco:"rgba(120,190,255,0.10)" },
+    gold:   { top:"#241A08", bot:"#0C0702", accent:"rgba(255,220,90,1)", grid:"rgba(255,220,90,0.11)", deco:"rgba(255,220,90,0.10)" },
     custom: { top:"#0E1A12", bot:"#040A06", accent:"rgba(120,255,150,1)", grid:"rgba(120,255,150,0.12)", deco:"rgba(120,255,150,0.10)" },
   };
 
@@ -421,151 +269,149 @@
   ];
 
   const LS = {
-    color: "nd_gd_color",
-    trail: "nd_gd_trail",
-    best:  "nd_gd_best_v1",
-    customLevels: "nd_gd_custom_levels_v1"
+    color:"nd2_color",
+    trail:"nd2_trail",
+    assist:"nd2_assist",
+    best:"nd2_best_v2",
+    customLevels:"nd2_custom_levels_v2"
   };
 
-  let chosenColor = safeStorage.get(LS.color, "mint");
-  let trailOn = (safeStorage.get(LS.trail, "1") === "1");
-  let best = safeStorage.getJSON(LS.best, { easy:0, medium:0, hard:0, custom:0 });
+  let chosenColor = safeStorage.get(LS.color,"mint");
+  let trailOn = (safeStorage.get(LS.trail,"1")==="1");
+  let assistOn = (safeStorage.get(LS.assist,"1")==="1"); // default ON to make it easier
+  let best = safeStorage.getJSON(LS.best, {});
 
-  function colObj(){
-    return COLORSETS.find(c=>c.value===chosenColor) || COLORSETS[0];
-  }
+  function colObj(){ return COLORSETS.find(c=>c.value===chosenColor) || COLORSETS[0]; }
   function saveSettings(){
     safeStorage.set(LS.color, chosenColor);
-    safeStorage.set(LS.trail, trailOn ? "1" : "0");
+    safeStorage.set(LS.trail, trailOn?"1":"0");
+    safeStorage.set(LS.assist, assistOn?"1":"0");
     safeStorage.setJSON(LS.best, best);
   }
 
-  // ===================== LEVELS (NO CHECKPOINTS) =====================
-  // More GD-ish patterns + moving blocks + saws
-  // t is distance units along level, percent = dist/len
-  const LEVELS = {
-    easy: {
-      name: "LEVEL 1 — EASY",
-      theme: "easy",
-      speed: 4.0,      // faster than before
-      len: 7200,
-      timeline: [
-        // warmup spikes
-        {t: 900,  type:"spike", dir: 1, w:34, h:34},
-        {t: 1250, type:"spike", dir: 1, w:34, h:34},
-        // jump pad chain
-        {t: 1700, type:"pad", w:52, h:18},
-        {t: 2050, type:"spike", dir: 1, w:34, h:34},
+  // ===================== LEVELS (original but GD-style) =====================
+  // NOTES:
+  // - No copyrighted GD layouts. These are original patterns, tuned to be beatable.
+  // - Early levels have NO gravity flip, NO tight movers.
+  function L(name, theme, speed, len, timeline, tag){
+    return { name, theme, speed, len, timeline, tag };
+  }
 
-        // moving block “going up/down”
-        {t: 2550, type:"mblock", w:120, h:58, baseOff:-10, amp:80, period:520, phase:0},
-        {t: 2950, type:"spike", dir: 1, w:34, h:34},
-
-        // saw + orb
-        {t: 3450, type:"saw", r:22, yOff:-90},
-        {t: 3800, type:"orb", w:30, h:30, yOff:-140},
-
-        // portal to UFO for a tiny section
-        {t: 4400, type:"portalUFO", w:42, h:150},
-        {t: 4850, type:"saw", r:20, yOff:-150},
-        {t: 5150, type:"orb", w:30, h:30, yOff:-165},
-        {t: 5600, type:"portalCube", w:42, h:150},
-
-        // finish: two movers
-        {t: 6150, type:"mblock", w:120, h:58, baseOff:-5, amp:95, period:480, phase:140},
-        {t: 6600, type:"spike", dir: 1, w:34, h:34},
-        {t: 6900, type:"spike", dir: 1, w:34, h:34},
-      ]
-    },
-    medium: {
-      name: "LEVEL 2 — MEDIUM",
-      theme: "medium",
-      speed: 4.4,
-      len: 8600,
-      timeline: [
-        {t: 800,  type:"spike", dir: 1, w:36, h:36},
-        {t: 1100, type:"spike", dir: 1, w:36, h:36},
-        {t: 1500, type:"pad", w:52, h:18},
-        {t: 1950, type:"saw", r:22, yOff:-100},
-
-        // moving platforms sequence
-        {t: 2400, type:"mblock", w:120, h:60, baseOff:-10, amp:90, period:520, phase:0},
-        {t: 2900, type:"mblock", w:120, h:60, baseOff:-30, amp:110, period:560, phase:120},
-
-        // orb into portal
-        {t: 3450, type:"orb", w:30, h:30, yOff:-150},
-        {t: 3950, type:"portalUFO", w:42, h:150},
-
-        // ufo corridor with saws
-        {t: 4300, type:"saw", r:20, yOff:-140},
-        {t: 4650, type:"saw", r:22, yOff:-190},
-        {t: 5100, type:"portalGrav", w:42, h:150},
-        {t: 5400, type:"orb", w:30, h:30, yOff:-160},
-        {t: 5850, type:"portalGrav", w:42, h:150},
-        {t: 6300, type:"portalCube", w:42, h:150},
-
-        // end: block + spike mix
-        {t: 6900, type:"block", w:120, h:70, baseOff:0},
-        {t: 7400, type:"spike", dir: 1, w:36, h:36},
-        {t: 7800, type:"mblock", w:120, h:60, baseOff:-10, amp:110, period:500, phase:60},
-        {t: 8200, type:"spike", dir: 1, w:36, h:36},
-      ]
-    },
-    hard: {
-      name: "LEVEL 3 — HARD",
-      theme: "hard",
-      speed: 4.8,
-      len: 9800,
-      timeline: [
-        {t: 700,  type:"spike", dir: 1, w:36, h:36},
-        {t: 980,  type:"spike", dir: 1, w:36, h:36},
-        {t: 1250, type:"saw", r:22, yOff:-110},
-        {t: 1600, type:"pad", w:52, h:18},
-        {t: 2050, type:"spike", dir: 1, w:36, h:36},
-        {t: 2350, type:"saw", r:20, yOff:-150},
-
-        // tight moving blocks
-        {t: 2850, type:"mblock", w:120, h:62, baseOff:-15, amp:125, period:480, phase:0},
-        {t: 3300, type:"mblock", w:120, h:62, baseOff:-30, amp:135, period:520, phase:160},
-
-        // orb chain
-        {t: 3800, type:"orb", w:30, h:30, yOff:-160},
-        {t: 4100, type:"orb", w:30, h:30, yOff:-185},
-
-        // portals + gravity flip
-        {t: 4550, type:"portalUFO", w:42, h:150},
-        {t: 5000, type:"saw", r:22, yOff:-170},
-        {t: 5400, type:"portalGrav", w:42, h:150},
-        {t: 5750, type:"saw", r:22, yOff:-90},
-        {t: 6200, type:"portalGrav", w:42, h:150},
-        {t: 6650, type:"portalCube", w:42, h:150},
-
-        // final rush
-        {t: 7350, type:"mblock", w:120, h:62, baseOff:-10, amp:140, period:460, phase:40},
-        {t: 7850, type:"spike", dir: 1, w:36, h:36},
-        {t: 8150, type:"saw", r:22, yOff:-120},
-        {t: 8600, type:"spike", dir: 1, w:36, h:36},
-        {t: 9000, type:"spike", dir: 1, w:36, h:36},
-      ]
-    }
-  };
+  // object types:
+  // spike, saw, block, mblock, pad (yellow), hpad (blue high jump), orb (purple), portalUFO, portalCube, portalGrav
+  const LEVELS = [
+    L("LEVEL 1 — STARTER", "neon", 3.6, 6500, [
+      {t: 1100, type:"spike", dir:1},
+      {t: 1600, type:"spike", dir:1},
+      {t: 2300, type:"pad"},                // yellow pad
+      {t: 3100, type:"spike", dir:1},
+      {t: 3800, type:"block", w:120, h:60, baseOff:0},
+      {t: 4300, type:"spike", dir:1},
+      {t: 5000, type:"saw", r:20, yOff:-120}, // early saw but generous
+    ], "Beginner"),
+    L("LEVEL 2 — HOP HOP", "blue", 3.8, 7200, [
+      {t: 900,  type:"spike", dir:1},
+      {t: 1400, type:"pad"},
+      {t: 2150, type:"spike", dir:1},
+      {t: 2700, type:"hpad"},                 // BLUE HIGH JUMP
+      {t: 3550, type:"block", w:120, h:70, baseOff:0},
+      {t: 4200, type:"spike", dir:1},
+      {t: 4800, type:"orb", yOff:-150},
+      {t: 5600, type:"spike", dir:1},
+    ], "High pad intro"),
+    L("LEVEL 3 — ORB RUN", "purple", 4.0, 7800, [
+      {t: 900,  type:"spike", dir:1},
+      {t: 1500, type:"pad"},
+      {t: 2350, type:"orb", yOff:-150},
+      {t: 3000, type:"spike", dir:1},
+      {t: 3650, type:"orb", yOff:-165},
+      {t: 4400, type:"block", w:120, h:60, baseOff:0},
+      {t: 5050, type:"spike", dir:1},
+      {t: 5700, type:"saw", r:20, yOff:-125},
+      {t: 6400, type:"orb", yOff:-160},
+    ], "Orbs"),
+    L("LEVEL 4 — MINI UFO", "pink", 4.1, 8200, [
+      {t: 950,  type:"spike", dir:1},
+      {t: 1500, type:"pad"},
+      {t: 2400, type:"portalUFO"},
+      // ufo corridor (wide + fair)
+      {t: 3000, type:"saw", r:18, yOff:-160},
+      {t: 3600, type:"orb", yOff:-175},
+      {t: 4300, type:"saw", r:18, yOff:-120},
+      {t: 5000, type:"portalCube"},
+      {t: 5800, type:"hpad"},
+      {t: 6900, type:"spike", dir:1},
+    ], "UFO"),
+    L("LEVEL 5 — MOVERS (EASY)", "gold", 4.2, 8800, [
+      {t: 1000, type:"spike", dir:1},
+      {t: 1600, type:"pad"},
+      // moving blocks but slow amplitude
+      {t: 2700, type:"mblock", w:120, h:58, baseOff:-10, amp:60, period:650, phase:0},
+      {t: 3600, type:"spike", dir:1},
+      {t: 4500, type:"mblock", w:120, h:58, baseOff:-20, amp:70, period:720, phase:120},
+      {t: 5400, type:"orb", yOff:-155},
+      {t: 6200, type:"saw", r:20, yOff:-130},
+      {t: 7200, type:"hpad"},
+      {t: 8100, type:"spike", dir:1},
+    ], "Movers"),
+    L("LEVEL 6 — SPEED UP", "blue", 4.5, 9400, [
+      {t: 900,  type:"spike", dir:1},
+      {t: 1300, type:"spike", dir:1},
+      {t: 1700, type:"pad"},
+      {t: 2400, type:"orb", yOff:-160},
+      {t: 3200, type:"saw", r:20, yOff:-140},
+      {t: 4000, type:"mblock", w:120, h:60, baseOff:-10, amp:80, period:600, phase:80},
+      {t: 5000, type:"portalUFO"},
+      {t: 5650, type:"saw", r:18, yOff:-150},
+      {t: 6350, type:"portalCube"},
+      {t: 7200, type:"hpad"},
+      {t: 8300, type:"spike", dir:1},
+      {t: 8800, type:"spike", dir:1},
+    ], "Faster"),
+    L("LEVEL 7 — GRAV (FAIR)", "purple", 4.6, 9800, [
+      {t: 950,  type:"spike", dir:1},
+      {t: 1650, type:"pad"},
+      {t: 2600, type:"portalGrav"},
+      {t: 3400, type:"spike", dir:-1},   // ceiling spikes after flip
+      {t: 4200, type:"portalGrav"},      // back normal
+      {t: 5200, type:"saw", r:20, yOff:-140},
+      {t: 6100, type:"mblock", w:120, h:60, baseOff:-10, amp:80, period:620, phase:0},
+      {t: 7200, type:"orb", yOff:-160},
+      {t: 8300, type:"hpad"},
+      {t: 9200, type:"spike", dir:1},
+    ], "Gravity"),
+    L("LEVEL 8 — CHALLENGE", "pink", 4.9, 10800, [
+      {t: 850,  type:"spike", dir:1},
+      {t: 1200, type:"spike", dir:1},
+      {t: 1700, type:"pad"},
+      {t: 2500, type:"saw", r:20, yOff:-140},
+      {t: 3300, type:"mblock", w:120, h:60, baseOff:-10, amp:95, period:560, phase:40},
+      {t: 4200, type:"orb", yOff:-170},
+      {t: 5000, type:"portalUFO"},
+      {t: 5650, type:"saw", r:18, yOff:-170},
+      {t: 6400, type:"saw", r:18, yOff:-125},
+      {t: 7150, type:"portalCube"},
+      {t: 8200, type:"portalGrav"},
+      {t: 8850, type:"spike", dir:-1},
+      {t: 9550, type:"portalGrav"},
+      {t: 10100, type:"hpad"},
+    ], "Hard")
+  ];
 
   // ===================== CUSTOM LEVELS (CREATOR) =====================
   let customLevels = safeStorage.getJSON(LS.customLevels, []);
   let selectedCustomIndex = 0;
-
-  function saveCustomLevels(){
-    safeStorage.setJSON(LS.customLevels, customLevels);
-  }
+  function saveCustomLevels(){ safeStorage.setJSON(LS.customLevels, customLevels); }
 
   // ===================== GAME STATE =====================
   const MODE = { CUBE:"cube", UFO:"ufo" };
 
-  let theme = THEMES.easy;
-  let levelKey = "easy";
-  let levelLen = LEVELS.easy.len;
-  let timeline = LEVELS.easy.timeline.map(o=>({...o}));
-  let speed = LEVELS.easy.speed;
+  let theme = THEMES.neon;
+  let levelIndex = 0;
+  let levelKey = "lvl0"; // for best tracking
+  let levelLen = LEVELS[0].len;
+  let timeline = LEVELS[0].timeline.map(o=>({...o}));
+  let speed = LEVELS[0].speed;
 
   let inMenu = true;
   let running = false;
@@ -580,86 +426,89 @@
   const parts = [];
   const trail = [];
 
-  // layout
   function ceilingY(){ return Math.floor(H()*0.12); }
   function groundY(){ return Math.floor(H()*0.82); }
 
-  // player
-  const p = { x: 0, y: 0, w: 44, h: 44, vy: 0, rot: 0, onSurface: true };
+  // player (slightly smaller hitbox feel)
+  const p = { x: 0, y: 0, w: 42, h: 42, vy: 0, rot: 0, onSurface: true };
   let mode = MODE.CUBE;
   let gSign = 1;
   let hold = false;
   let holdFrames = 0;
 
+  // assist: slightly less speed and slightly stronger jump window
+  function assistMul(){ return assistOn ? 0.88 : 1.0; }
+
   const phys = {
-    cube: { g: 0.62, jump: -9.6, maxFall: 17, holdBoost: -0.16, holdMax: 12 },
-    ufo:  { g: 0.56, flap: -7.0, maxFall: 15 },
+    cube: { g: 0.60, jump: -9.9, maxFall: 17, holdBoost: -0.14, holdMax: 12 },
+    ufo:  { g: 0.55, flap: -7.1, maxFall: 15 },
+    padMul: 1.15,     // yellow pad
+    hpadMul: 1.45     // BLUE HIGH PAD (new)
   };
 
   function resetRun(){
-    dead = false; won = false;
-    running = true; paused = false;
+    dead=false; won=false;
+    running=true; paused=false;
 
-    dist = 0; idx = 0;
-    objs.length = 0; parts.length = 0; trail.length = 0;
+    dist=0; idx=0;
+    objs.length=0; parts.length=0; trail.length=0;
 
     mode = MODE.CUBE;
     gSign = 1;
     p.x = Math.floor(W()*0.22);
-    p.y = groundY() - p.h;
+    p.y = groundY()-p.h;
     p.vy = 0;
     p.rot = 0;
     p.onSurface = true;
 
-    hold = false;
-    holdFrames = 0;
-
+    hold=false; holdFrames=0;
     spawnFromTimeline();
   }
 
-  function setLevel(key){
-    levelKey = key;
-
-    if (key === "custom") {
-      const pack = customLevels[selectedCustomIndex];
-      timeline = (pack?.timeline || []).map(o=>({...o}));
-      levelLen = pack?.len || 9000;
-      speed = pack?.speed || 4.2;
-      theme = THEMES.custom;
-    } else {
-      timeline = LEVELS[key].timeline.map(o=>({...o}));
-      levelLen = LEVELS[key].len;
-      speed = LEVELS[key].speed;
-      theme = THEMES[LEVELS[key].theme] || THEMES.easy;
-    }
+  function setLevelByIndex(i){
+    levelIndex = i;
+    const lv = LEVELS[i];
+    theme = THEMES[lv.theme] || THEMES.neon;
+    speed = lv.speed;
+    levelLen = lv.len;
+    timeline = lv.timeline.map(o=>({...o}));
+    levelKey = "lvl"+i;
     regenDecor();
   }
 
-  function startLevel(key){
-    setLevel(key);
+  function setLevelCustom(){
+    const pack = customLevels[selectedCustomIndex];
+    theme = THEMES.custom;
+    speed = pack?.speed ?? 4.0;
+    levelLen = pack?.len ?? 9000;
+    timeline = (pack?.timeline ?? []).map(o=>({...o}));
+    levelKey = "custom_"+selectedCustomIndex;
+    regenDecor();
+  }
+
+  function startLevelIndex(i){
+    setLevelByIndex(i);
+    hideMenu();
+    resetRun();
+  }
+  function startCustom(){
+    setLevelCustom();
     hideMenu();
     resetRun();
   }
 
   function backToMenu(){
-    inMenu = true;
-    running = false;
-    paused = true;
-    dead = false;
-    won = false;
-    showMenu();
-    renderMenu();
+    inMenu=true; running=false; paused=true; dead=false; won=false;
+    showMenu(); renderMenu();
   }
 
-  // ===================== DECOR / VISUALS =====================
-  let starsFar = [], starsNear = [], tris = [];
-  let pulse = 0;
-
+  // ===================== DECOR =====================
+  let starsFar=[], starsNear=[], tris=[];
+  let pulse=0;
   function regenDecor(){
-    const w = W(), h = H();
+    const w=W(), h=H();
     starsFar = Array.from({length: 90}, ()=>({ x:Math.random()*w, y:Math.random()*(h-40), s:1+Math.random()*1.6, a:0.06+Math.random()*0.16 }));
     starsNear = Array.from({length: 60}, ()=>({ x:Math.random()*w, y:Math.random()*(h-40), s:1+Math.random()*2.2, a:0.08+Math.random()*0.20 }));
-
     tris = Array.from({length: 20}, ()=>({
       x: Math.random()*(w+600),
       y: Math.random()*(h*0.70),
@@ -672,66 +521,45 @@
 
   function spawnBurst(x,y,n,color){
     for(let i=0;i<n;i++){
-      parts.push({
-        x,y,
-        vx:(Math.random()*2-1)*2.6,
-        vy:(Math.random()*-1)*2.6,
-        life: 18+Math.random()*18,
-        c: color
-      });
+      parts.push({ x,y, vx:(Math.random()*2-1)*2.6, vy:(Math.random()*-1)*2.6, life: 18+Math.random()*18, c: color });
     }
   }
-
   function pushTrail(){
-    if (!trailOn) return;
-    const col = colObj().glow;
+    if(!trailOn) return;
+    const col=colObj().glow;
     trail.push({ x:p.x+p.w*0.25, y:p.y+p.h*0.55, life: 18, c: col });
-    if (trail.length > 160) trail.shift();
+    if(trail.length>160) trail.shift();
   }
 
   // ===================== SPAWN OBJECTS =====================
   function spawnFromTimeline(){
-    const w = W();
-    while(idx < timeline.length && dist + (w+260) >= timeline[idx].t){
-      const e = timeline[idx];
+    const w=W();
+    while(idx<timeline.length && dist+(w+260)>=timeline[idx].t){
+      const e=timeline[idx];
       const x = w + 260 + (e.t - dist);
 
-      if (e.type === "spike"){
-        objs.push({ type:"spike", x, dir: e.dir??1, w:e.w||34, h:e.h||34 });
-      }
-      else if (e.type === "block"){
+      if(e.type==="spike"){
+        objs.push({ type:"spike", x, dir:e.dir??1, w:e.w||34, h:e.h||34 });
+      } else if(e.type==="block"){
         const y = groundY() - (e.h||60) + (e.baseOff||0);
         objs.push({ type:"block", x, y, w:e.w||110, h:e.h||60 });
-      }
-      else if (e.type === "mblock"){
-        // moving block: y oscillates
+      } else if(e.type==="mblock"){
         const baseY = groundY() - (e.h||60) + (e.baseOff||0);
-        objs.push({
-          type:"mblock", x,
-          w:e.w||120, h:e.h||60,
-          baseY,
-          amp: e.amp||90,
-          period: e.period||520,
-          phase: e.phase||0
-        });
-      }
-      else if (e.type === "pad"){
-        objs.push({ type:"pad", x, y: groundY() - (e.h||18), w:e.w||52, h:e.h||18 });
-      }
-      else if (e.type === "orb"){
-        objs.push({ type:"orb", x, y: groundY() + (e.yOff??-140), w:e.w||30, h:e.h||30, used:false });
-      }
-      else if (e.type === "saw"){
-        objs.push({ type:"saw", x, y: groundY() + (e.yOff??-120), r: e.r||22, spin: 0 });
-      }
-      else if (e.type === "portalUFO"){
-        objs.push({ type:"portalUFO", x, y: groundY() - (e.h||150), w:e.w||42, h:e.h||150 });
-      }
-      else if (e.type === "portalCube"){
-        objs.push({ type:"portalCube", x, y: groundY() - (e.h||150), w:e.w||42, h:e.h||150 });
-      }
-      else if (e.type === "portalGrav"){
-        objs.push({ type:"portalGrav", x, y: groundY() - (e.h||150), w:e.w||42, h:e.h||150 });
+        objs.push({ type:"mblock", x, w:e.w||120, h:e.h||60, baseY, amp:e.amp||80, period:e.period||650, phase:e.phase||0 });
+      } else if(e.type==="pad"){
+        objs.push({ type:"pad", x, y: groundY() - 18, w: 52, h: 18 });
+      } else if(e.type==="hpad"){
+        objs.push({ type:"hpad", x, y: groundY() - 18, w: 52, h: 18 });
+      } else if(e.type==="orb"){
+        objs.push({ type:"orb", x, y: groundY() + (e.yOff??-150), w:30, h:30, used:false });
+      } else if(e.type==="saw"){
+        objs.push({ type:"saw", x, y: groundY() + (e.yOff??-130), r:e.r||20, spin:0 });
+      } else if(e.type==="portalUFO"){
+        objs.push({ type:"portalUFO", x, y: groundY()-150, w:42, h:150 });
+      } else if(e.type==="portalCube"){
+        objs.push({ type:"portalCube", x, y: groundY()-150, w:42, h:150 });
+      } else if(e.type==="portalGrav"){
+        objs.push({ type:"portalGrav", x, y: groundY()-150, w:42, h:150 });
       }
 
       idx++;
@@ -740,13 +568,12 @@
 
   // ===================== INPUT / ACTION =====================
   function doAction(){
-    if (!running || paused || dead || won) return;
-
-    if (mode === MODE.CUBE){
-      if (p.onSurface){
+    if(!running || paused || dead || won) return;
+    if(mode===MODE.CUBE){
+      if(p.onSurface){
         p.vy = phys.cube.jump * gSign;
-        p.onSurface = false;
-        holdFrames = 0;
+        p.onSurface=false;
+        holdFrames=0;
         spawnBurst(p.x+p.w*0.25, p.y+p.h*0.8, 10, colObj().glow);
       }
     } else {
@@ -755,12 +582,12 @@
     }
   }
 
-  // ===================== UPDATE PHYSICS =====================
+  // ===================== PHYSICS =====================
   function applyPhysics(){
-    const ceil = ceilingY(), grnd = groundY();
+    const ceil=ceilingY(), grnd=groundY();
 
-    if (mode === MODE.CUBE){
-      if (hold && holdFrames < phys.cube.holdMax && !p.onSurface && (p.vy*gSign) < 0){
+    if(mode===MODE.CUBE){
+      if(hold && holdFrames<phys.cube.holdMax && !p.onSurface && (p.vy*gSign)<0){
         p.vy += phys.cube.holdBoost * gSign;
         holdFrames++;
       }
@@ -769,17 +596,17 @@
       p.vy = clamp(p.vy, -30, phys.cube.maxFall);
       p.y += p.vy;
 
-      if (gSign === 1){
-        if (p.y + p.h >= grnd){ p.y = grnd - p.h; p.vy=0; p.onSurface=true; }
+      if(gSign===1){
+        if(p.y+p.h>=grnd){ p.y=grnd-p.h; p.vy=0; p.onSurface=true; }
         else p.onSurface=false;
-        if (p.y <= ceil) dead = true;
+        if(p.y<=ceil) dead=true;
       } else {
-        if (p.y <= ceil){ p.y = ceil; p.vy=0; p.onSurface=true; }
+        if(p.y<=ceil){ p.y=ceil; p.vy=0; p.onSurface=true; }
         else p.onSurface=false;
-        if (p.y + p.h >= grnd) dead = true;
+        if(p.y+p.h>=grnd) dead=true;
       }
 
-      if (!p.onSurface) p.rot += 0.12 * gSign;
+      if(!p.onSurface) p.rot += 0.12*gSign;
       else {
         const q = Math.PI/2;
         const target = Math.round(p.rot/q)*q;
@@ -789,18 +616,25 @@
       p.vy += phys.ufo.g * gSign;
       p.vy = clamp(p.vy, -30, phys.ufo.maxFall);
       p.y += p.vy;
-      if (p.y <= ceil || p.y + p.h >= grnd) dead = true;
+      if(p.y<=ceil || p.y+p.h>=grnd) dead=true;
       p.rot = lerp(p.rot, (p.vy*0.05), 0.25);
     }
   }
 
+  // fairer hitbox
   function playerBox(){
-    const pad = 7;
+    const pad=8;
     return { x:p.x+pad, y:p.y+pad, w:p.w-pad*2, h:p.h-pad*2 };
   }
 
+  function setBestPercent(force100=false){
+    const pct = force100 ? 100 : Math.floor(clamp(dist/levelLen,0,1)*100);
+    const cur = best[levelKey] || 0;
+    if(pct>cur){ best[levelKey]=pct; saveSettings(); }
+  }
+
+  // ===================== UPDATE =====================
   function update(){
-    // particles + trail
     for(const s of parts){ s.x+=s.vx; s.y+=s.vy; s.vy+=0.18; s.life-=1; }
     while(parts.length && parts[0].life<=0) parts.shift();
 
@@ -809,119 +643,127 @@
 
     pulse += 0.02;
 
-    if (!running || paused || inMenu || dead || won) return;
+    if(!running || paused || inMenu || dead || won) return;
 
-    dist += speed;
-    if (trailOn) pushTrail();
+    const sp = speed * assistMul();
+    dist += sp;
+    if(trailOn) pushTrail();
 
     spawnFromTimeline();
 
-    // move objects
-    for (const o of objs){
-      o.x -= speed;
-      if (o.type === "saw") o.spin += 0.18;
+    for(const o of objs){
+      o.x -= sp;
+      if(o.type==="saw") o.spin += 0.18;
     }
-    while(objs.length && (objs[0].x + 200) < -260) objs.shift();
+    while(objs.length && (objs[0].x+200)<-260) objs.shift();
 
     applyPhysics();
 
-    // death or win
-    if (dead){
+    if(dead){
       spawnBurst(p.x+p.w/2, p.y+p.h/2, 26, "rgba(255,80,130,1)");
-      setBestPercent();
+      setBestPercent(false);
       return;
     }
-    if (dist >= levelLen){
-      won = true;
+    if(dist>=levelLen){
+      won=true;
       spawnBurst(p.x+p.w/2, p.y+p.h/2, 34, colObj().glow);
       setBestPercent(true);
       return;
     }
 
     const pb = playerBox();
-    const ceil = ceilingY(), grnd = groundY();
+    const ceil=ceilingY(), grnd=groundY();
 
-    // collisions
-    for (const o of objs){
-      // dynamic y for moving blocks
-      if (o.type === "mblock"){
-        const t = (dist + o.phase) / o.period;
-        const yOsc = Math.sin(t * Math.PI * 2) * o.amp;
-        o.y = o.baseY + yOsc;
+    for(const o of objs){
+      if(o.type==="mblock"){
+        const t=(dist+o.phase)/o.period;
+        o.y = o.baseY + Math.sin(t*Math.PI*2)*o.amp;
       }
 
-      if (o.type === "spike"){
-        const baseY = (o.dir===1) ? grnd : ceil;
-        const boxY = (o.dir===1) ? (baseY - o.h) : baseY;
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x, boxY, o.w, o.h)){
-          dead = true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
+      // --- FAIR SPIKE HITBOX ---
+      // Instead of full rect, use a smaller “core” box to avoid cheap deaths.
+      if(o.type==="spike"){
+        const baseY = (o.dir===1)?grnd:ceil;
+        const boxY = (o.dir===1)?(baseY-o.h):baseY;
+        const core = { x:o.x+7, y:boxY+7, w:o.w-14, h:o.h-10 };
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, core.x,core.y,core.w,core.h)){
+          dead=true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
         }
       }
-      else if (o.type === "saw"){
-        // circle vs player rect
-        if (circleRectHit(o.x, o.y, o.r, pb.x,pb.y,pb.w,pb.h)){
-          dead = true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
+
+      // --- FAIR SAW HITBOX ---
+      else if(o.type==="saw"){
+        const r = o.r - 4; // smaller than drawn
+        if(circleRectHit(o.x,o.y,r, pb.x,pb.y,pb.w,pb.h)){
+          dead=true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
         }
       }
-      else if (o.type === "block" || o.type === "mblock"){
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h)){
-          if (mode === MODE.CUBE){
+
+      else if(o.type==="block" || o.type==="mblock"){
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h)){
+          if(mode===MODE.CUBE){
             const prevY = pb.y - p.vy;
             const top = o.y;
-            if (prevY + pb.h <= top + 6 && p.vy >= 0){
+            if(prevY + pb.h <= top + 8 && p.vy >= 0){
               p.y = top - p.h;
               p.vy = 0;
               p.onSurface = true;
               spawnBurst(p.x+p.w/2, top, 8, colObj().glow);
             } else {
-              dead = true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
+              dead=true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
             }
           } else {
-            dead = true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
+            dead=true; spawnBurst(p.x+p.w/2,p.y+p.h/2,24,"rgba(255,80,130,1)"); break;
           }
         }
       }
-      else if (o.type === "pad"){
-        if (mode === MODE.CUBE && rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h)){
-          const prevY = pb.y - p.vy;
-          if (prevY + pb.h <= o.y + 8 && p.vy >= 0){
-            p.vy = phys.cube.jump * 1.12 * gSign;
-            p.onSurface = false;
-            holdFrames = 0;
-            spawnBurst(o.x+o.w/2, o.y, 18, "rgba(255,220,90,1)");
+
+      // pads (easier to trigger: accept slightly above)
+      else if(o.type==="pad" || o.type==="hpad"){
+        if(mode===MODE.CUBE){
+          const padBox = { x:o.x, y:o.y-6, w:o.w, h:o.h+10 };
+          if(rectHit(pb.x,pb.y,pb.w,pb.h, padBox.x,padBox.y,padBox.w,padBox.h)){
+            const prevY = pb.y - p.vy;
+            if(prevY + pb.h <= (o.y + 10) && p.vy >= 0){
+              const mul = (o.type==="hpad") ? phys.hpadMul : phys.padMul;
+              p.vy = phys.cube.jump * mul * gSign;
+              p.onSurface=false;
+              holdFrames=0;
+              spawnBurst(o.x+o.w/2, o.y, 20, (o.type==="hpad") ? "rgba(120,190,255,1)" : "rgba(255,220,90,1)");
+            }
           }
         }
       }
-      else if (o.type === "orb" && !o.used){
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && hold){
-          o.used = true;
-          if (mode === MODE.CUBE){
-            p.vy = phys.cube.jump * 1.06 * gSign;
-            p.onSurface = false;
-            holdFrames = 0;
+
+      else if(o.type==="orb" && !o.used){
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && hold){
+          o.used=true;
+          if(mode===MODE.CUBE){
+            p.vy = phys.cube.jump * 1.10 * gSign;
+            p.onSurface=false;
+            holdFrames=0;
           } else {
             p.vy = phys.ufo.flap * 1.22 * gSign;
           }
           spawnBurst(o.x+o.w/2, o.y+o.h/2, 16, "rgba(170,120,255,1)");
         }
       }
-      else if (o.type === "portalUFO"){
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && mode !== MODE.UFO){
-          mode = MODE.UFO;
-          p.vy = 0;
+
+      else if(o.type==="portalUFO"){
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && mode!==MODE.UFO){
+          mode=MODE.UFO; p.vy=0;
           spawnBurst(o.x+o.w/2, o.y+o.h/2, 18, "rgba(120,190,255,1)");
         }
       }
-      else if (o.type === "portalCube"){
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && mode !== MODE.CUBE){
-          mode = MODE.CUBE;
-          p.y = clamp(p.y, ceil+8, grnd - p.h - 8);
-          p.vy = 0;
+      else if(o.type==="portalCube"){
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h) && mode!==MODE.CUBE){
+          mode=MODE.CUBE; p.vy=0;
+          p.y = clamp(p.y, ceil+8, grnd-p.h-8);
           spawnBurst(o.x+o.w/2, o.y+o.h/2, 18, "rgba(0,255,190,1)");
         }
       }
-      else if (o.type === "portalGrav"){
-        if (rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h)){
+      else if(o.type==="portalGrav"){
+        if(rectHit(pb.x,pb.y,pb.w,pb.h, o.x,o.y,o.w,o.h)){
           gSign *= -1;
           p.vy *= -0.35;
           spawnBurst(o.x+o.w/2, o.y+o.h/2, 22, "rgba(255,220,90,1)");
@@ -930,25 +772,15 @@
     }
   }
 
-  // ===================== BEST % SAVE =====================
-  function setBestPercent(force100=false){
-    const pct = force100 ? 100 : Math.floor(clamp(dist / levelLen, 0, 1) * 100);
-    if (!best[levelKey] || pct > best[levelKey]){
-      best[levelKey] = pct;
-      saveSettings();
-    }
-  }
-
-  // ===================== DRAW (GD STYLE) =====================
+  // ===================== DRAW =====================
   function drawBackground(){
-    const w = W(), h = H();
-    const g = ctx.createLinearGradient(0,0,0,h);
+    const w=W(), h=H();
+    const g=ctx.createLinearGradient(0,0,0,h);
     g.addColorStop(0, theme.top);
     g.addColorStop(1, theme.bot);
-    ctx.fillStyle = g;
+    ctx.fillStyle=g;
     ctx.fillRect(0,0,w,h);
 
-    // subtle pulse glow
     const pulseA = 0.08 + Math.sin(pulse)*0.03;
     ctx.save();
     ctx.globalAlpha = pulseA;
@@ -960,255 +792,68 @@
   }
 
   function drawGrid(){
-    const w = W(), h = H();
+    const w=W(), h=H();
     ctx.save();
-    ctx.globalAlpha = 0.18;
-    ctx.strokeStyle = theme.grid;
-    ctx.lineWidth = 1;
-
-    const step = 56;
-    for(let x=0; x<=w; x+=step){
-      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke();
-    }
-    for(let y=0; y<=h; y+=step){
-      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke();
-    }
+    ctx.globalAlpha=0.18;
+    ctx.strokeStyle=theme.grid;
+    ctx.lineWidth=1;
+    const step=56;
+    for(let x=0;x<=w;x+=step){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
+    for(let y=0;y<=h;y+=step){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
     ctx.restore();
   }
 
   function drawStars(layer, par){
-    const w = W();
+    const w=W();
     for(const s of layer){
-      let x = (s.x - dist*par) % (w+60);
-      if (x < 0) x += (w+60);
-      ctx.globalAlpha = s.a;
-      ctx.fillStyle = "white";
-      ctx.fillRect(x, s.y, s.s, s.s);
+      let x=(s.x - dist*par)%(w+60);
+      if(x<0) x += (w+60);
+      ctx.globalAlpha=s.a;
+      ctx.fillStyle="white";
+      ctx.fillRect(x,s.y,s.s,s.s);
     }
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha=1;
   }
 
   function drawTriangles(){
-    const w = W(), h = H();
+    const w=W();
     for(const t of tris){
-      let x = (t.x - dist*(0.25+t.z)) % (w+600);
-      if (x < -80) x += (w+600);
-
+      let x=(t.x - dist*(0.25+t.z))%(w+600);
+      if(x<-80) x += (w+600);
       ctx.save();
-      ctx.translate(x, t.y);
+      ctx.translate(x,t.y);
       ctx.rotate(t.rot + dist*0.0005);
-      ctx.globalAlpha = t.a;
-      ctx.fillStyle = theme.deco;
+      ctx.globalAlpha=t.a;
+      ctx.fillStyle=theme.deco;
       ctx.beginPath();
-      ctx.moveTo(0, -t.s);
-      ctx.lineTo(t.s, t.s);
-      ctx.lineTo(-t.s, t.s);
-      ctx.closePath();
-      ctx.fill();
+      ctx.moveTo(0,-t.s); ctx.lineTo(t.s,t.s); ctx.lineTo(-t.s,t.s);
+      ctx.closePath(); ctx.fill();
       ctx.restore();
     }
   }
 
   function drawLines(){
-    const w = W();
-    const ceil = ceilingY();
-    const grnd = groundY();
-
+    const w=W();
+    const ceil=ceilingY(), grnd=groundY();
     glow(()=>{
-      ctx.strokeStyle = theme.accent;
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 0.60;
-      ctx.beginPath(); ctx.moveTo(0, ceil); ctx.lineTo(w, ceil); ctx.stroke();
-      ctx.globalAlpha = 1;
-      ctx.beginPath(); ctx.moveTo(0, grnd+1); ctx.lineTo(w, grnd+1); ctx.stroke();
+      ctx.strokeStyle=theme.accent;
+      ctx.lineWidth=2;
+      ctx.globalAlpha=0.60;
+      ctx.beginPath(); ctx.moveTo(0,ceil); ctx.lineTo(w,ceil); ctx.stroke();
+      ctx.globalAlpha=1;
+      ctx.beginPath(); ctx.moveTo(0,grnd+1); ctx.lineTo(w,grnd+1); ctx.stroke();
     }, theme.accent, 18, 0.25);
-  }
-
-  function drawObjects(){
-    const ceil = ceilingY(), grnd = groundY();
-    for(const o of objs){
-      if (o.type === "spike"){
-        const baseY = (o.dir===1) ? grnd : ceil;
-        const tipY  = (o.dir===1) ? (baseY - o.h) : (baseY + o.h);
-        glow(()=>{
-          ctx.fillStyle = "rgba(255,80,130,0.95)";
-          ctx.beginPath();
-          ctx.moveTo(o.x, baseY);
-          ctx.lineTo(o.x + o.w/2, tipY);
-          ctx.lineTo(o.x + o.w, baseY);
-          ctx.closePath();
-          ctx.fill();
-
-          // inner highlight
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = "white";
-          ctx.beginPath();
-          ctx.moveTo(o.x+6, baseY);
-          ctx.lineTo(o.x + o.w/2, tipY + (o.dir===1 ? 8 : -8));
-          ctx.lineTo(o.x + o.w-6, baseY);
-          ctx.closePath();
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }, "rgba(255,80,130,1)", 22, 1);
-      }
-      else if (o.type === "block" || o.type === "mblock"){
-        glow(()=>{
-          ctx.fillStyle = "rgba(120,190,255,0.85)";
-          rr(o.x, o.y, o.w, o.h, 10);
-          ctx.fill();
-
-          // “GD-ish” face panels
-          ctx.globalAlpha = 0.18;
-          ctx.fillStyle = "white";
-          rr(o.x+10, o.y+10, o.w-20, o.h-20, 8);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }, "rgba(120,190,255,1)", 22, 1);
-      }
-      else if (o.type === "pad"){
-        glow(()=>{
-          ctx.fillStyle = "rgba(255,220,90,0.95)";
-          rr(o.x, o.y, o.w, o.h, 10);
-          ctx.fill();
-
-          ctx.globalAlpha = 0.22;
-          ctx.fillStyle = "white";
-          rr(o.x+8, o.y+4, o.w-16, o.h-8, 8);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }, "rgba(255,220,90,1)", 18, 1);
-      }
-      else if (o.type === "orb"){
-        const c = o.used ? "rgba(170,120,255,0.25)" : "rgba(170,120,255,0.95)";
-        glow(()=>{
-          ctx.fillStyle = c;
-          ctx.beginPath();
-          ctx.arc(o.x+o.w/2, o.y+o.h/2, o.w/2, 0, Math.PI*2);
-          ctx.fill();
-
-          // ring
-          ctx.globalAlpha = 0.35;
-          ctx.strokeStyle = "white";
-          ctx.lineWidth = 2;
-          ctx.beginPath();
-          ctx.arc(o.x+o.w/2, o.y+o.h/2, o.w/2-4, 0, Math.PI*2);
-          ctx.stroke();
-          ctx.globalAlpha = 1;
-        }, "rgba(170,120,255,1)", 18, 1);
-      }
-      else if (o.type === "saw"){
-        glow(()=>{
-          ctx.save();
-          ctx.translate(o.x, o.y);
-          ctx.rotate(o.spin);
-          ctx.fillStyle = "rgba(255,80,130,0.95)";
-          ctx.beginPath();
-          ctx.arc(0,0,o.r,0,Math.PI*2);
-          ctx.fill();
-
-          // teeth
-          ctx.globalAlpha = 0.90;
-          ctx.fillStyle = "rgba(255,255,255,0.25)";
-          for(let i=0;i<12;i++){
-            ctx.rotate((Math.PI*2)/12);
-            ctx.beginPath();
-            ctx.moveTo(o.r-2,0);
-            ctx.lineTo(o.r+6,3);
-            ctx.lineTo(o.r+6,-3);
-            ctx.closePath();
-            ctx.fill();
-          }
-
-          // center
-          ctx.globalAlpha = 0.8;
-          ctx.fillStyle = "rgba(0,0,0,0.35)";
-          ctx.beginPath();
-          ctx.arc(0,0, o.r*0.35, 0, Math.PI*2);
-          ctx.fill();
-
-          ctx.restore();
-          ctx.globalAlpha = 1;
-        }, "rgba(255,80,130,1)", 22, 1);
-      }
-      else {
-        const col =
-          o.type === "portalUFO" ? "rgba(120,190,255,0.95)" :
-          o.type === "portalCube" ? "rgba(0,255,190,0.95)" :
-          "rgba(255,220,90,0.95)";
-        glow(()=>{
-          ctx.fillStyle = col;
-          rr(o.x, o.y, o.w, o.h, 16);
-          ctx.fill();
-
-          // inner glow stripe
-          ctx.globalAlpha = 0.28;
-          ctx.fillStyle = "white";
-          rr(o.x+8, o.y+10, o.w-16, o.h-20, 14);
-          ctx.fill();
-          ctx.globalAlpha = 1;
-        }, col, 22, 0.95);
-      }
-    }
-  }
-
-  function drawPlayer(){
-    const col = colObj();
-    const cx = p.x + p.w/2;
-    const cy = p.y + p.h/2;
-
-    ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(p.rot);
-
-    if (mode === MODE.CUBE){
-      glow(()=>{
-        ctx.fillStyle = col.main;
-        rr(-p.w/2, -p.h/2, p.w, p.h, 10);
-        ctx.fill();
-
-        // inner cut
-        ctx.globalAlpha = 0.18;
-        ctx.fillStyle = "white";
-        rr(-p.w/2+10, -p.h/2+10, p.w-20, p.h-20, 8);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-
-        // eyes (GD vibe)
-        ctx.globalAlpha = 0.85;
-        ctx.fillStyle = "rgba(0,0,0,0.45)";
-        rr(-10, -6, 7, 12, 3); ctx.fill();
-        rr( 3, -6, 7, 12, 3); ctx.fill();
-        ctx.globalAlpha = 1;
-      }, col.glow, 26, 1);
-    } else {
-      const uCol = "rgba(255,120,200,0.95)";
-      const uGlow = "rgba(255,120,200,1)";
-      glow(()=>{
-        ctx.fillStyle = uCol;
-        rr(-p.w/2, -p.h/2+6, p.w, p.h-12, 16);
-        ctx.fill();
-
-        // dome
-        ctx.globalAlpha = 0.22;
-        ctx.fillStyle = "white";
-        rr(-p.w/2+10, -p.h/2+14, p.w-20, p.h-28, 14);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }, uGlow, 24, 1);
-    }
-
-    ctx.restore();
   }
 
   function drawTrail(){
     for(const t of trail){
-      const a = clamp(t.life/18,0,1);
+      const a=clamp(t.life/18,0,1);
       ctx.save();
-      ctx.globalAlpha = a * 0.5;
-      ctx.shadowColor = t.c;
-      ctx.shadowBlur = 16;
-      ctx.fillStyle = t.c;
-      rr(t.x, t.y, 5, 5, 2);
+      ctx.globalAlpha=a*0.5;
+      ctx.shadowColor=t.c;
+      ctx.shadowBlur=16;
+      ctx.fillStyle=t.c;
+      rr(t.x,t.y,5,5,2);
       ctx.fill();
       ctx.restore();
     }
@@ -1216,97 +861,226 @@
 
   function drawParticles(){
     for(const s of parts){
-      const a = clamp(s.life/36, 0, 1);
+      const a=clamp(s.life/36,0,1);
       ctx.save();
-      ctx.globalAlpha = a * 0.9;
-      ctx.shadowColor = s.c;
-      ctx.shadowBlur = 14;
-      ctx.fillStyle = s.c;
-      ctx.fillRect(s.x, s.y, 3, 3);
+      ctx.globalAlpha=a*0.9;
+      ctx.shadowColor=s.c;
+      ctx.shadowBlur=14;
+      ctx.fillStyle=s.c;
+      ctx.fillRect(s.x,s.y,3,3);
       ctx.restore();
     }
   }
 
-  function drawProgress(){
-    const w = W();
-    const pct = clamp(dist/levelLen, 0, 1);
+  function drawObjects(){
+    const ceil=ceilingY(), grnd=groundY();
+    for(const o of objs){
+      if(o.type==="spike"){
+        const baseY=(o.dir===1)?grnd:ceil;
+        const tipY =(o.dir===1)?(baseY-o.h):(baseY+o.h);
+        glow(()=>{
+          ctx.fillStyle="rgba(255,80,130,0.95)";
+          ctx.beginPath();
+          ctx.moveTo(o.x,baseY);
+          ctx.lineTo(o.x+o.w/2,tipY);
+          ctx.lineTo(o.x+o.w,baseY);
+          ctx.closePath();
+          ctx.fill();
+          ctx.globalAlpha=0.22;
+          ctx.fillStyle="white";
+          ctx.beginPath();
+          ctx.moveTo(o.x+6,baseY);
+          ctx.lineTo(o.x+o.w/2, tipY + (o.dir===1?8:-8));
+          ctx.lineTo(o.x+o.w-6,baseY);
+          ctx.closePath(); ctx.fill();
+          ctx.globalAlpha=1;
+        }, "rgba(255,80,130,1)", 22, 1);
+      }
+      else if(o.type==="block" || o.type==="mblock"){
+        glow(()=>{
+          ctx.fillStyle="rgba(120,190,255,0.85)";
+          rr(o.x,o.y,o.w,o.h,10); ctx.fill();
+          ctx.globalAlpha=0.18;
+          ctx.fillStyle="white";
+          rr(o.x+10,o.y+10,o.w-20,o.h-20,8); ctx.fill();
+          ctx.globalAlpha=1;
+        }, "rgba(120,190,255,1)", 22, 1);
+      }
+      else if(o.type==="pad" || o.type==="hpad"){
+        const col = (o.type==="hpad") ? "rgba(120,190,255,0.95)" : "rgba(255,220,90,0.95)";
+        glow(()=>{
+          ctx.fillStyle=col;
+          rr(o.x,o.y,o.w,o.h,10); ctx.fill();
+          ctx.globalAlpha=0.22;
+          ctx.fillStyle="white";
+          rr(o.x+8,o.y+4,o.w-16,o.h-8,8); ctx.fill();
+          ctx.globalAlpha=1;
+        }, col, 18, 1);
+      }
+      else if(o.type==="orb"){
+        const c=o.used ? "rgba(170,120,255,0.25)" : "rgba(170,120,255,0.95)";
+        glow(()=>{
+          ctx.fillStyle=c;
+          ctx.beginPath(); ctx.arc(o.x+o.w/2,o.y+o.h/2,o.w/2,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha=0.35;
+          ctx.strokeStyle="white"; ctx.lineWidth=2;
+          ctx.beginPath(); ctx.arc(o.x+o.w/2,o.y+o.h/2,o.w/2-4,0,Math.PI*2); ctx.stroke();
+          ctx.globalAlpha=1;
+        }, "rgba(170,120,255,1)", 18, 1);
+      }
+      else if(o.type==="saw"){
+        glow(()=>{
+          ctx.save();
+          ctx.translate(o.x,o.y);
+          ctx.rotate(o.spin);
+          ctx.fillStyle="rgba(255,80,130,0.95)";
+          ctx.beginPath(); ctx.arc(0,0,o.r,0,Math.PI*2); ctx.fill();
+          ctx.globalAlpha=0.90;
+          ctx.fillStyle="rgba(255,255,255,0.25)";
+          for(let i=0;i<12;i++){
+            ctx.rotate((Math.PI*2)/12);
+            ctx.beginPath();
+            ctx.moveTo(o.r-2,0);
+            ctx.lineTo(o.r+6,3);
+            ctx.lineTo(o.r+6,-3);
+            ctx.closePath(); ctx.fill();
+          }
+          ctx.globalAlpha=0.8;
+          ctx.fillStyle="rgba(0,0,0,0.35)";
+          ctx.beginPath(); ctx.arc(0,0,o.r*0.35,0,Math.PI*2); ctx.fill();
+          ctx.restore();
+          ctx.globalAlpha=1;
+        }, "rgba(255,80,130,1)", 22, 1);
+      }
+      else {
+        const col = (o.type==="portalUFO") ? "rgba(120,190,255,0.95)"
+                  : (o.type==="portalCube") ? "rgba(0,255,190,0.95)"
+                  : "rgba(255,220,90,0.95)";
+        glow(()=>{
+          ctx.fillStyle=col;
+          rr(o.x,o.y,o.w,o.h,16); ctx.fill();
+          ctx.globalAlpha=0.28;
+          ctx.fillStyle="white";
+          rr(o.x+8,o.y+10,o.w-16,o.h-20,14); ctx.fill();
+          ctx.globalAlpha=1;
+        }, col, 22, 0.95);
+      }
+    }
+  }
 
-    // Top-right progress bar + percent
-    const barW = Math.min(360, w*0.34);
-    const barH = 10;
-    const x = w - barW - 16;
-    const y = 16;
-
+  function drawPlayer(){
+    const col=colObj();
+    const cx=p.x+p.w/2, cy=p.y+p.h/2;
     ctx.save();
-    ctx.globalAlpha = 0.92;
-    ctx.fillStyle = "rgba(255,255,255,0.10)";
-    rr(x,y,barW,barH,8); ctx.fill();
+    ctx.translate(cx,cy);
+    ctx.rotate(p.rot);
 
-    glow(()=>{
-      ctx.fillStyle = theme.accent;
-      rr(x,y,Math.max(10, barW*pct),barH,8); ctx.fill();
-    }, theme.accent, 18, 0.65);
+    if(mode===MODE.CUBE){
+      glow(()=>{
+        ctx.fillStyle=col.main;
+        rr(-p.w/2,-p.h/2,p.w,p.h,10); ctx.fill();
+        ctx.globalAlpha=0.18;
+        ctx.fillStyle="white";
+        rr(-p.w/2+10,-p.h/2+10,p.w-20,p.h-20,8); ctx.fill();
+        ctx.globalAlpha=1;
+        ctx.globalAlpha=0.85;
+        ctx.fillStyle="rgba(0,0,0,0.45)";
+        rr(-10,-6,7,12,3); ctx.fill();
+        rr(  3,-6,7,12,3); ctx.fill();
+        ctx.globalAlpha=1;
+      }, col.glow, 26, 1);
+    } else {
+      const uCol="rgba(255,120,200,0.95)", uGlow="rgba(255,120,200,1)";
+      glow(()=>{
+        ctx.fillStyle=uCol;
+        rr(-p.w/2,-p.h/2+6,p.w,p.h-12,16); ctx.fill();
+        ctx.globalAlpha=0.22;
+        ctx.fillStyle="white";
+        rr(-p.w/2+10,-p.h/2+14,p.w-20,p.h-28,14); ctx.fill();
+        ctx.globalAlpha=1;
+      }, uGlow, 24, 1);
+    }
 
     ctx.restore();
-
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
-    ctx.font = "14px system-ui, Segoe UI, Arial";
-    ctx.textAlign = "right";
-    ctx.fillText(Math.floor(pct*100) + "%", w-16, 44);
-    ctx.textAlign = "left";
   }
+
+  function drawProgress(){
+    const w=W();
+    const pct=clamp(dist/levelLen,0,1);
+    const barW=Math.min(380,w*0.36), barH=10;
+    const x=w-barW-16, y=16;
+
+    ctx.save();
+    ctx.globalAlpha=0.92;
+    ctx.fillStyle="rgba(255,255,255,0.10)";
+    rr(x,y,barW,barH,8); ctx.fill();
+    glow(()=>{
+      ctx.fillStyle=theme.accent;
+      rr(x,y,Math.max(10,barW*pct),barH,8); ctx.fill();
+    }, theme.accent, 18, 0.65);
+    ctx.restore();
+
+    ctx.fillStyle="rgba(255,255,255,0.92)";
+    ctx.font="14px system-ui, Segoe UI, Arial";
+    ctx.textAlign="right";
+    ctx.fillText(Math.floor(pct*100)+"%", w-16, 44);
+    ctx.textAlign="left";
+  }
+
+  const ui={menuBtn:null};
 
   function drawTopUI(){
-    const w = W();
-    ctx.fillStyle = "rgba(255,255,255,0.92)";
-    ctx.font = "15px system-ui, Segoe UI, Arial";
+    const w=W();
+    ctx.fillStyle="rgba(255,255,255,0.92)";
+    ctx.font="15px system-ui, Segoe UI, Arial";
 
-    const name = (levelKey==="custom") ? "LEVEL 4 — CUSTOM" : (LEVELS[levelKey]?.name || "LEVEL");
-    ctx.fillText(`${name}  •  ${mode.toUpperCase()}  •  Grav: ${gSign===1 ? "NORMAL" : "FLIPPED"}  •  Speed: ${speed.toFixed(1)}`, 16, 26);
+    let name="CUSTOM";
+    if(levelKey.startsWith("lvl")){
+      const i=Number(levelKey.replace("lvl",""));
+      name = LEVELS[i]?.name || "LEVEL";
+    } else if(levelKey.startsWith("custom_")){
+      name = "CUSTOM LEVEL";
+    }
 
-    // in-game menu button
-    const btn = { x: 16, y: 34, w: 88, h: 26 };
+    ctx.fillText(`${name}  •  ${mode.toUpperCase()}  •  Grav: ${gSign===1?"NORMAL":"FLIPPED"}  •  Assist: ${assistOn?"ON":"OFF"}`, 16, 26);
+
+    const btn={x:16,y:34,w:92,h:26};
     ctx.save();
-    ctx.globalAlpha = 0.85;
-    ctx.fillStyle = "rgba(255,255,255,0.08)";
-    rr(btn.x, btn.y, btn.w, btn.h, 12); ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.14)";
+    ctx.globalAlpha=0.85;
+    ctx.fillStyle="rgba(255,255,255,0.08)";
+    rr(btn.x,btn.y,btn.w,btn.h,12); ctx.fill();
+    ctx.strokeStyle="rgba(255,255,255,0.14)";
     ctx.stroke();
-    ctx.fillStyle = "rgba(255,255,255,0.85)";
-    ctx.font = "13px system-ui, Segoe UI, Arial";
-    ctx.fillText("MENU (Esc)", btn.x + 10, btn.y + 18);
+    ctx.fillStyle="rgba(255,255,255,0.85)";
+    ctx.font="13px system-ui, Segoe UI, Arial";
+    ctx.fillText("MENU (Esc)", btn.x+10, btn.y+18);
     ctx.restore();
-
-    // store for click
-    ui.menuBtn = btn;
+    ui.menuBtn=btn;
   }
 
-  const ui = { menuBtn: null };
-
   function drawEndOverlay(){
-    if (!dead && !won) return;
-
-    const w = W(), h = H();
-    ctx.fillStyle = "rgba(0,0,0,0.60)";
+    if(!dead && !won) return;
+    const w=W(), h=H();
+    ctx.fillStyle="rgba(0,0,0,0.60)";
     ctx.fillRect(0,0,w,h);
 
-    ctx.textAlign = "center";
-    ctx.fillStyle = "rgba(255,255,255,0.95)";
-    ctx.font = "38px system-ui, Segoe UI, Arial";
+    ctx.textAlign="center";
+    ctx.fillStyle="rgba(255,255,255,0.95)";
+    ctx.font="38px system-ui, Segoe UI, Arial";
     ctx.fillText(won ? "LEVEL COMPLETE!" : "CRASHED!", w/2, h/2 - 18);
 
-    const pct = Math.floor(clamp(dist/levelLen,0,1)*100);
-    ctx.fillStyle = "rgba(255,255,255,0.78)";
-    ctx.font = "16px system-ui, Segoe UI, Arial";
+    const pct=Math.floor(clamp(dist/levelLen,0,1)*100);
+    ctx.fillStyle="rgba(255,255,255,0.78)";
+    ctx.font="16px system-ui, Segoe UI, Arial";
     ctx.fillText(`Progress: ${pct}%  •  Space/Click = Restart  •  Esc = Menu`, w/2, h/2 + 20);
 
-    ctx.textAlign = "left";
+    ctx.textAlign="left";
   }
 
   function draw(){
     drawBackground();
-    drawStars(starsFar, 0.10);
-    drawStars(starsNear, 0.22);
+    drawStars(starsFar,0.10);
+    drawStars(starsNear,0.22);
     drawTriangles();
     drawGrid();
     drawLines();
@@ -1322,74 +1096,61 @@
   }
 
   // ===================== MENU UI =====================
-  const overlay = document.getElementById("overlay");
-  const tabLevels = document.getElementById("tabLevels");
-  const tabCustomize = document.getElementById("tabCustomize");
-  const tabCreator = document.getElementById("tabCreator");
-  const contentTitle = document.getElementById("contentTitle");
-  const contentBody = document.getElementById("contentBody");
+  const overlay=document.getElementById("overlay");
+  const tabLevels=document.getElementById("tabLevels");
+  const tabCustomize=document.getElementById("tabCustomize");
+  const tabCreator=document.getElementById("tabCreator");
+  const contentTitle=document.getElementById("contentTitle");
+  const contentBody=document.getElementById("contentBody");
 
-  let menuTab = "levels";
-
-  function showMenu(){ overlay.style.display = "grid"; }
-  function hideMenu(){ overlay.style.display = "none"; inMenu = false; }
+  let menuTab="levels";
+  function showMenu(){ overlay.style.display="grid"; }
+  function hideMenu(){ overlay.style.display="none"; inMenu=false; }
 
   function setTab(which){
-    menuTab = which;
-    tabLevels.classList.toggle("active", which==="levels");
-    tabCustomize.classList.toggle("active", which==="customize");
-    tabCreator.classList.toggle("active", which==="creator");
+    menuTab=which;
+    tabLevels.classList.toggle("active",which==="levels");
+    tabCustomize.classList.toggle("active",which==="customize");
+    tabCreator.classList.toggle("active",which==="creator");
     renderMenu();
   }
-
-  tabLevels.onclick = ()=>setTab("levels");
-  tabCustomize.onclick = ()=>setTab("customize");
-  tabCreator.onclick = ()=>setTab("creator");
+  tabLevels.onclick=()=>setTab("levels");
+  tabCustomize.onclick=()=>setTab("customize");
+  tabCreator.onclick=()=>setTab("creator");
 
   function mkThumb(themeName){
-    const c = document.createElement("canvas");
-    c.width = 420; c.height = 120;
-    const g = c.getContext("2d");
-    const th = THEMES[themeName] || THEMES.easy;
+    const c=document.createElement("canvas");
+    c.width=420; c.height=120;
+    const g=c.getContext("2d");
+    const th=THEMES[themeName]||THEMES.neon;
 
-    const bg = g.createLinearGradient(0,0,0,c.height);
-    bg.addColorStop(0, th.top);
-    bg.addColorStop(1, th.bot);
-    g.fillStyle = bg;
-    g.fillRect(0,0,c.width,c.height);
+    const bg=g.createLinearGradient(0,0,0,c.height);
+    bg.addColorStop(0,th.top); bg.addColorStop(1,th.bot);
+    g.fillStyle=bg; g.fillRect(0,0,c.width,c.height);
 
-    g.globalAlpha = 0.22;
-    g.strokeStyle = th.accent;
-    g.lineWidth = 2;
-    g.beginPath(); g.moveTo(0, c.height*0.82); g.lineTo(c.width, c.height*0.82); g.stroke();
-    g.globalAlpha = 1;
+    g.globalAlpha=0.22;
+    g.strokeStyle=th.accent; g.lineWidth=2;
+    g.beginPath(); g.moveTo(0,c.height*0.82); g.lineTo(c.width,c.height*0.82); g.stroke();
+    g.globalAlpha=1;
 
-    // little character
-    const col = colObj();
+    const col=colObj();
     g.save();
-    g.shadowColor = col.glow;
-    g.shadowBlur = 18;
-    g.fillStyle = col.main;
-    g.translate(c.width*0.18, c.height*0.62);
+    g.shadowColor=col.glow; g.shadowBlur=18;
+    g.fillStyle=col.main;
+    g.translate(c.width*0.18,c.height*0.62);
     g.rotate(-0.2);
     g.fillRect(-12,-12,24,24);
     g.restore();
 
-    // spike + saw
     g.save();
-    g.shadowColor = "rgba(255,80,130,1)";
-    g.shadowBlur = 14;
-    g.fillStyle = "rgba(255,80,130,0.95)";
-    const gy = c.height*0.82;
+    g.shadowColor="rgba(255,80,130,1)"; g.shadowBlur=14;
+    g.fillStyle="rgba(255,80,130,0.95)";
+    const gy=c.height*0.82;
     g.beginPath();
-    g.moveTo(c.width*0.56, gy);
-    g.lineTo(c.width*0.56+10, gy-24);
-    g.lineTo(c.width*0.56+20, gy);
-    g.closePath();
-    g.fill();
-    g.beginPath();
-    g.arc(c.width*0.76, gy-36, 14, 0, Math.PI*2);
-    g.fill();
+    g.moveTo(c.width*0.56,gy);
+    g.lineTo(c.width*0.56+10,gy-24);
+    g.lineTo(c.width*0.56+20,gy);
+    g.closePath(); g.fill();
     g.restore();
 
     c.style.width="100%";
@@ -1397,419 +1158,380 @@
     return c;
   }
 
-  function mkLevelTab(label, sub, key, themeName){
-    const wrap = document.createElement("div");
-    wrap.className = "levelTab";
+  function mkLevelTab(i){
+    const lv=LEVELS[i];
+    const wrap=document.createElement("div");
+    wrap.className="levelTab";
 
-    const left = document.createElement("div");
-    left.className = "levelLeft";
+    const left=document.createElement("div");
+    left.className="levelLeft";
 
-    const name = document.createElement("div");
-    name.className = "levelName";
-    name.textContent = label;
+    const name=document.createElement("div");
+    name.className="levelName";
+    name.textContent=lv.name;
 
-    const desc = document.createElement("div");
-    desc.className = "levelSub";
-    desc.textContent = sub;
+    const desc=document.createElement("div");
+    desc.className="levelSub";
+    desc.textContent=`${lv.tag} • Speed ${lv.speed.toFixed(1)} • Length ${lv.len}`;
 
-    const meta = document.createElement("div");
-    meta.className = "levelMeta";
-    const bestPct = best[key] || 0;
-    const pill1 = document.createElement("span");
-    pill1.className = "pill";
-    pill1.textContent = "Best: " + bestPct + "%";
-    const pill2 = document.createElement("span");
-    pill2.className = "pill";
-    pill2.textContent = (key==="easy"?"Beginner":"") + (key==="medium"?"Portals + Movers":"") + (key==="hard"?"Fast + Tight":"");
-    meta.append(pill1, pill2);
+    const meta=document.createElement("div");
+    meta.className="levelMeta";
+    const key="lvl"+i;
+    const bestPct=best[key]||0;
+    const pill1=document.createElement("span");
+    pill1.className="pill";
+    pill1.textContent="Best: "+bestPct+"%";
+    const pill2=document.createElement("span");
+    pill2.className="pill";
+    pill2.textContent=(assistOn ? "Assist ON" : "Assist OFF");
+    meta.append(pill1,pill2);
 
-    const play = document.createElement("button");
-    play.className = "playBtn";
-    play.textContent = "PLAY";
-    play.onclick = ()=>startLevel(key);
+    const play=document.createElement("button");
+    play.className="playBtn";
+    play.textContent="PLAY";
+    play.onclick=()=>startLevelIndex(i);
 
-    left.append(name, desc, meta, play);
+    left.append(name,desc,meta,play);
 
-    const thumb = document.createElement("div");
-    thumb.className = "thumb";
-    thumb.appendChild(mkThumb(themeName));
+    const thumb=document.createElement("div");
+    thumb.className="thumb";
+    thumb.appendChild(mkThumb(lv.theme));
 
-    wrap.append(left, thumb);
+    wrap.append(left,thumb);
     return wrap;
   }
 
-  // ===== Creator (simple)
-  const creator = {
-    tool: "spike",
-    dir: 1,
-    scrollT: 0,
-    windowT: 2800,
-    timeline: [],
-    speed: 4.2,
-    len: 9000
-  };
+  // ===== Creator (same as before but includes hpad)
+  const creator = { tool:"spike", dir:1, scrollT:0, windowT:2800, timeline:[], speed:4.0, len:9000 };
 
   function renderMenu(){
-    contentBody.innerHTML = "";
+    contentBody.innerHTML="";
 
-    if (menuTab === "levels"){
-      contentTitle.textContent = "Pick a Level";
-
-      const grid = document.createElement("div");
-      grid.className = "levelGrid";
+    if(menuTab==="levels"){
+      contentTitle.textContent="Pick a Level";
+      const grid=document.createElement("div");
+      grid.className="levelGrid";
+      LEVELS.forEach((_,i)=>grid.appendChild(mkLevelTab(i)));
       contentBody.appendChild(grid);
 
-      grid.appendChild(mkLevelTab("LEVEL 1 — EASY", "Faster start, moving blocks, saws, short UFO section.", "easy", "easy"));
-      grid.appendChild(mkLevelTab("LEVEL 2 — MEDIUM", "More movers + gravity flip + saw corridor.", "medium", "medium"));
-      grid.appendChild(mkLevelTab("LEVEL 3 — HARD", "Tight patterns, faster, more hazards.", "hard", "hard"));
-
-      // Custom level selector
-      const box = document.createElement("div");
-      box.className = "box";
-      const t = document.createElement("div");
-      t.className = "title";
-      t.textContent = "LEVEL 4 — CUSTOM";
+      const box=document.createElement("div");
+      box.className="box";
+      const t=document.createElement("div");
+      t.className="title";
+      t.textContent="CUSTOM LEVEL";
       box.appendChild(t);
 
-      const sub = document.createElement("div");
-      sub.className = "tip";
-      sub.innerHTML = `Play a saved custom level, or build one in <b>Level Creator</b>.`;
+      const sub=document.createElement("div");
+      sub.className="tip";
+      sub.innerHTML=`Play a saved custom level, or build one in <b>Level Creator</b>.`;
       box.appendChild(sub);
 
-      const row = document.createElement("div");
-      row.className = "row2";
+      const row=document.createElement("div");
+      row.className="row2";
 
-      const sel = document.createElement("select");
-      if (!customLevels.length){
-        const o = document.createElement("option");
-        o.textContent = "(no saved custom levels yet)";
+      const sel=document.createElement("select");
+      if(!customLevels.length){
+        const o=document.createElement("option");
+        o.textContent="(no saved custom levels yet)";
         sel.appendChild(o);
-      } else {
+      }else{
         customLevels.forEach((lv,i)=>{
-          const o = document.createElement("option");
-          o.textContent = lv.name || ("Custom " + (i+1));
+          const o=document.createElement("option");
+          o.textContent=lv.name || ("Custom "+(i+1));
           sel.appendChild(o);
         });
-        sel.selectedIndex = clamp(selectedCustomIndex, 0, customLevels.length-1);
+        sel.selectedIndex=clamp(selectedCustomIndex,0,customLevels.length-1);
       }
-      sel.onchange = ()=> selectedCustomIndex = sel.selectedIndex;
+      sel.onchange=()=>selectedCustomIndex=sel.selectedIndex;
 
-      const play = document.createElement("button");
-      play.className = "smallBtn primary";
-      play.textContent = "Play Custom";
-      play.onclick = ()=>startLevel("custom");
+      const play=document.createElement("button");
+      play.className="smallBtn primary";
+      play.textContent="Play Custom";
+      play.onclick=startCustom;
 
-      row.append(sel, play);
+      row.append(sel,play);
       box.appendChild(row);
 
-      const openCreator = document.createElement("button");
-      openCreator.className = "smallBtn";
-      openCreator.textContent = "Open Level Creator";
-      openCreator.onclick = ()=>setTab("creator");
+      const openCreator=document.createElement("button");
+      openCreator.className="smallBtn";
+      openCreator.textContent="Open Level Creator";
+      openCreator.onclick=()=>setTab("creator");
       box.appendChild(openCreator);
 
       contentBody.appendChild(box);
     }
 
-    else if (menuTab === "customize"){
-      contentTitle.textContent = "Customize";
+    else if(menuTab==="customize"){
+      contentTitle.textContent="Customize / Options";
+      const box=document.createElement("div");
+      box.className="box";
 
-      const box = document.createElement("div");
-      box.className = "box";
+      const row=document.createElement("div");
+      row.className="row2";
 
-      const row = document.createElement("div");
-      row.className = "row2";
-
-      const colorWrap = document.createElement("div");
-      const l1 = document.createElement("label");
-      l1.textContent = "Character Color";
-      const sel1 = document.createElement("select");
+      const colorWrap=document.createElement("div");
+      const l1=document.createElement("label");
+      l1.textContent="Character Color";
+      const sel1=document.createElement("select");
       COLORSETS.forEach(c=>{
-        const o = document.createElement("option");
-        o.value = c.value;
-        o.textContent = c.label;
+        const o=document.createElement("option");
+        o.value=c.value;
+        o.textContent=c.label;
         sel1.appendChild(o);
       });
-      sel1.value = chosenColor;
-      sel1.onchange = ()=>{
-        chosenColor = sel1.value;
-        saveSettings();
-        renderMenu();
-      };
-      colorWrap.append(l1, sel1);
+      sel1.value=chosenColor;
+      sel1.onchange=()=>{ chosenColor=sel1.value; saveSettings(); renderMenu(); };
+      colorWrap.append(l1,sel1);
 
-      const trailWrap = document.createElement("div");
-      const l2 = document.createElement("label");
-      l2.textContent = "Trail";
-      const sel2 = document.createElement("select");
-      sel2.innerHTML = `<option value="1">ON</option><option value="0">OFF</option>`;
-      sel2.value = trailOn ? "1" : "0";
-      sel2.onchange = ()=>{
-        trailOn = (sel2.value === "1");
-        saveSettings();
-      };
-      trailWrap.append(l2, sel2);
+      const trailWrap=document.createElement("div");
+      const l2=document.createElement("label");
+      l2.textContent="Trail";
+      const sel2=document.createElement("select");
+      sel2.innerHTML=`<option value="1">ON</option><option value="0">OFF</option>`;
+      sel2.value=trailOn?"1":"0";
+      sel2.onchange=()=>{ trailOn=(sel2.value==="1"); saveSettings(); };
+      trailWrap.append(l2,sel2);
 
-      row.append(colorWrap, trailWrap);
+      row.append(colorWrap,trailWrap);
       box.appendChild(row);
 
-      const tip = document.createElement("div");
-      tip.className = "tip";
-      tip.textContent = "If your browser blocks storage, settings may not save — but the game still works.";
+      const rowB=document.createElement("div");
+      rowB.className="row2";
+
+      const assistWrap=document.createElement("div");
+      const l3=document.createElement("label");
+      l3.textContent="Assist Mode (Recommended)";
+      const sel3=document.createElement("select");
+      sel3.innerHTML=`<option value="1">ON</option><option value="0">OFF</option>`;
+      sel3.value=assistOn?"1":"0";
+      sel3.onchange=()=>{ assistOn=(sel3.value==="1"); saveSettings(); renderMenu(); };
+      assistWrap.append(l3,sel3);
+
+      const resetBest=document.createElement("button");
+      resetBest.className="smallBtn";
+      resetBest.textContent="Reset Best %";
+      resetBest.onclick=()=>{ best={}; saveSettings(); renderMenu(); };
+
+      rowB.append(assistWrap, resetBest);
+      box.appendChild(rowB);
+
+      const tip=document.createElement("div");
+      tip.className="tip";
+      tip.innerHTML=`Blue pads = <b>high jump</b>. Purple orbs jump if you <b>hold/press</b> while touching them.`;
       box.appendChild(tip);
 
       contentBody.appendChild(box);
     }
 
     else {
-      contentTitle.textContent = "Level Creator (Simple)";
+      contentTitle.textContent="Level Creator (Simple)";
+      const box=document.createElement("div");
+      box.className="box";
 
-      const box = document.createElement("div");
-      box.className = "box";
-
-      const info = document.createElement("div");
-      info.className = "tip";
-      info.innerHTML = `Click to place items. <b>Shift+Click</b> removes nearest. Save to play under <b>Custom</b>.`;
+      const info=document.createElement("div");
+      info.className="tip";
+      info.innerHTML=`Click to place items. <b>Shift+Click</b> removes nearest. Save to play under <b>Custom</b>.`;
       box.appendChild(info);
 
-      const toolRow = document.createElement("div");
-      toolRow.className = "btnRow";
+      const toolRow=document.createElement("div");
+      toolRow.className="btnRow";
       box.appendChild(toolRow);
 
-      const tools = [
-        ["spike", "Spike"],
-        ["pad", "Pad"],
-        ["orb", "Orb"],
-        ["block", "Block"],
-        ["mblock", "Moving Block"],
-        ["saw", "Saw"],
-        ["portalUFO", "UFO Portal"],
-        ["portalCube", "Cube Portal"],
-        ["portalGrav", "Gravity Portal"],
+      const tools=[
+        ["spike","Spike"],
+        ["pad","Pad (Yellow)"],
+        ["hpad","High Pad (Blue)"],
+        ["orb","Orb"],
+        ["block","Block"],
+        ["mblock","Moving Block"],
+        ["saw","Saw"],
+        ["portalUFO","UFO Portal"],
+        ["portalCube","Cube Portal"],
+        ["portalGrav","Gravity Portal"],
       ];
 
       function toolBtn(key,label){
-        const b = document.createElement("button");
-        b.className = "smallBtn" + (creator.tool===key ? " primary" : "");
-        b.textContent = label;
-        b.onclick = ()=>{ creator.tool = key; renderMenu(); };
+        const b=document.createElement("button");
+        b.className="smallBtn"+(creator.tool===key?" primary":"");
+        b.textContent=label;
+        b.onclick=()=>{ creator.tool=key; renderMenu(); };
         return b;
       }
       tools.forEach(([k,l])=>toolRow.appendChild(toolBtn(k,l)));
 
-      const opts = document.createElement("div");
-      opts.className = "btnRow";
+      const opts=document.createElement("div");
+      opts.className="btnRow";
       box.appendChild(opts);
 
-      const dirBtn = document.createElement("button");
-      dirBtn.className = "smallBtn";
-      dirBtn.textContent = "Spike Dir: " + (creator.dir===1 ? "UP" : "DOWN");
-      dirBtn.onclick = ()=>{ creator.dir *= -1; renderMenu(); };
+      const dirBtn=document.createElement("button");
+      dirBtn.className="smallBtn";
+      dirBtn.textContent="Spike Dir: "+(creator.dir===1?"UP":"DOWN");
+      dirBtn.onclick=()=>{ creator.dir*=-1; renderMenu(); };
       opts.appendChild(dirBtn);
 
-      const scrollBtn = document.createElement("button");
-      scrollBtn.className = "smallBtn";
-      scrollBtn.textContent = "Scroll Window";
-      scrollBtn.onclick = ()=>{
-        creator.scrollT += 700;
-        if (creator.scrollT > 7000) creator.scrollT = 0;
-        renderMenu();
-      };
+      const scrollBtn=document.createElement("button");
+      scrollBtn.className="smallBtn";
+      scrollBtn.textContent="Scroll Window";
+      scrollBtn.onclick=()=>{ creator.scrollT+=700; if(creator.scrollT>7000) creator.scrollT=0; renderMenu(); };
       opts.appendChild(scrollBtn);
 
-      // speed + len controls
-      const sp = document.createElement("button");
-      sp.className = "smallBtn";
-      sp.textContent = "Speed: " + creator.speed.toFixed(1);
-      sp.onclick = ()=>{
-        creator.speed = clamp(Math.round((creator.speed+0.2)*10)/10, 3.4, 6.0);
-        renderMenu();
-      };
+      const sp=document.createElement("button");
+      sp.className="smallBtn";
+      sp.textContent="Speed: "+creator.speed.toFixed(1);
+      sp.onclick=()=>{ creator.speed=clamp(Math.round((creator.speed+0.2)*10)/10,3.4,6.0); renderMenu(); };
       opts.appendChild(sp);
 
-      const ln = document.createElement("button");
-      ln.className = "smallBtn";
-      ln.textContent = "Length: " + creator.len;
-      ln.onclick = ()=>{
-        creator.len += 800;
-        if (creator.len > 12000) creator.len = 7600;
-        renderMenu();
-      };
+      const ln=document.createElement("button");
+      ln.className="smallBtn";
+      ln.textContent="Length: "+creator.len;
+      ln.onclick=()=>{ creator.len+=800; if(creator.len>12000) creator.len=7600; renderMenu(); };
       opts.appendChild(ln);
 
-      const ed = document.createElement("canvas");
-      ed.width = 900;
-      ed.height = 280;
-      ed.className = "editorCanvas";
+      const ed=document.createElement("canvas");
+      ed.width=900; ed.height=280;
+      ed.className="editorCanvas";
       box.appendChild(ed);
 
-      // draw editor
-      const ec = ed.getContext("2d");
-      const th = THEMES.custom;
-      const bg = ec.createLinearGradient(0,0,0,ed.height);
-      bg.addColorStop(0, th.top);
-      bg.addColorStop(1, th.bot);
-      ec.fillStyle = bg;
-      ec.fillRect(0,0,ed.width,ed.height);
+      const ec=ed.getContext("2d");
+      const th=THEMES.custom;
+      const bg=ec.createLinearGradient(0,0,0,ed.height);
+      bg.addColorStop(0,th.top); bg.addColorStop(1,th.bot);
+      ec.fillStyle=bg; ec.fillRect(0,0,ed.width,ed.height);
 
-      const gy = ed.height*0.82;
-      ec.globalAlpha = 0.22;
-      ec.strokeStyle = th.accent;
-      ec.lineWidth = 2;
+      const gy=ed.height*0.82;
+      ec.globalAlpha=0.22; ec.strokeStyle=th.accent; ec.lineWidth=2;
       ec.beginPath(); ec.moveTo(0,gy); ec.lineTo(ed.width,gy); ec.stroke();
-      ec.globalAlpha = 1;
+      ec.globalAlpha=1;
 
-      const windowT = creator.windowT;
-      const leftT = creator.scrollT;
-      const toX = t=>((t-leftT)/windowT)*ed.width;
-      const toT = x=>leftT+(x/ed.width)*windowT;
+      const windowT=creator.windowT, leftT=creator.scrollT;
+      const toX=t=>((t-leftT)/windowT)*ed.width;
+      const toT=x=>leftT+(x/ed.width)*windowT;
 
-      // items
       for(const o of creator.timeline){
-        const x = toX(o.t);
-        if (x < -80 || x > ed.width+80) continue;
+        const x=toX(o.t);
+        if(x<-80||x>ed.width+80) continue;
 
-        if (o.type==="spike"){
-          const baseY = (o.dir===1) ? gy : 26;
-          const tipY  = (o.dir===1) ? baseY-30 : baseY+30;
+        if(o.type==="spike"){
+          const baseY=(o.dir===1)?gy:26;
+          const tipY=(o.dir===1)?baseY-30:baseY+30;
           ec.save();
-          ec.shadowColor = "rgba(255,80,130,1)";
-          ec.shadowBlur = 10;
-          ec.fillStyle = "rgba(255,80,130,0.95)";
+          ec.shadowColor="rgba(255,80,130,1)"; ec.shadowBlur=10;
+          ec.fillStyle="rgba(255,80,130,0.95)";
           ec.beginPath();
-          ec.moveTo(x,baseY);
-          ec.lineTo(x+12,tipY);
-          ec.lineTo(x+24,baseY);
-          ec.closePath();
-          ec.fill();
+          ec.moveTo(x,baseY); ec.lineTo(x+12,tipY); ec.lineTo(x+24,baseY);
+          ec.closePath(); ec.fill();
           ec.restore();
-        }
-        else if (o.type==="saw"){
+        } else if(o.type==="saw"){
           ec.save();
-          ec.shadowColor = "rgba(255,80,130,1)";
-          ec.shadowBlur = 10;
-          ec.fillStyle = "rgba(255,80,130,0.95)";
-          ec.beginPath();
-          ec.arc(x, gy-70, 14, 0, Math.PI*2);
-          ec.fill();
+          ec.shadowColor="rgba(255,80,130,1)"; ec.shadowBlur=10;
+          ec.fillStyle="rgba(255,80,130,0.95)";
+          ec.beginPath(); ec.arc(x,gy-70,14,0,Math.PI*2); ec.fill();
           ec.restore();
-        }
-        else if (o.type==="pad"){
+        } else if(o.type==="pad" || o.type==="hpad"){
+          const col = (o.type==="hpad") ? "rgba(120,190,255,0.95)" : "rgba(255,220,90,0.95)";
           ec.save();
-          ec.shadowColor = "rgba(255,220,90,1)";
-          ec.shadowBlur = 10;
-          ec.fillStyle = "rgba(255,220,90,0.95)";
-          ec.fillRect(x, gy-12, 30, 12);
+          ec.shadowColor=col; ec.shadowBlur=10;
+          ec.fillStyle=col;
+          ec.fillRect(x,gy-12,30,12);
           ec.restore();
-        }
-        else if (o.type==="orb"){
+        } else if(o.type==="orb"){
           ec.save();
-          ec.shadowColor = "rgba(170,120,255,1)";
-          ec.shadowBlur = 10;
-          ec.fillStyle = "rgba(170,120,255,0.95)";
-          ec.beginPath();
-          ec.arc(x, gy-80, 12, 0, Math.PI*2);
-          ec.fill();
+          ec.shadowColor="rgba(170,120,255,1)"; ec.shadowBlur=10;
+          ec.fillStyle="rgba(170,120,255,0.95)";
+          ec.beginPath(); ec.arc(x,gy-80,12,0,Math.PI*2); ec.fill();
           ec.restore();
-        }
-        else if (o.type==="block" || o.type==="mblock"){
+        } else if(o.type==="block" || o.type==="mblock"){
           ec.save();
-          ec.shadowColor = "rgba(120,190,255,1)";
-          ec.shadowBlur = 10;
-          ec.fillStyle = "rgba(120,190,255,0.85)";
-          ec.fillRect(x, gy-60, 40, 60);
+          ec.shadowColor="rgba(120,190,255,1)"; ec.shadowBlur=10;
+          ec.fillStyle="rgba(120,190,255,0.85)";
+          ec.fillRect(x,gy-60,40,60);
           ec.restore();
-        }
-        else {
-          const col =
-            o.type==="portalUFO" ? "rgba(120,190,255,0.95)" :
-            o.type==="portalCube" ? "rgba(0,255,190,0.95)" :
-            "rgba(255,220,90,0.95)";
+        } else {
+          const col = (o.type==="portalUFO") ? "rgba(120,190,255,0.95)"
+                    : (o.type==="portalCube") ? "rgba(0,255,190,0.95)"
+                    : "rgba(255,220,90,0.95)";
           ec.save();
-          ec.shadowColor = col;
-          ec.shadowBlur = 10;
-          ec.fillStyle = col;
-          ec.fillRect(x, gy-90, 12, 90);
+          ec.shadowColor=col; ec.shadowBlur=10;
+          ec.fillStyle=col;
+          ec.fillRect(x,gy-90,12,90);
           ec.restore();
         }
       }
 
-      ed.onmousedown = (ev)=>{
-        const r = ed.getBoundingClientRect();
-        const x = (ev.clientX - r.left) * (ed.width / r.width);
-        const y = (ev.clientY - r.top) * (ed.height / r.height);
-        const t = Math.round(toT(x));
+      ed.onmousedown=(ev)=>{
+        const r=ed.getBoundingClientRect();
+        const x=(ev.clientX-r.left)*(ed.width/r.width);
+        const t=Math.round(toT(x));
 
-        if (ev.shiftKey){
-          if (!creator.timeline.length) return;
-          let bestI=0, bestD=Infinity;
+        if(ev.shiftKey){
+          if(!creator.timeline.length) return;
+          let bestI=0,bestD=Infinity;
           for(let i=0;i<creator.timeline.length;i++){
-            const d = Math.abs(creator.timeline[i].t - t);
-            if (d<bestD){ bestD=d; bestI=i; }
+            const d=Math.abs(creator.timeline[i].t-t);
+            if(d<bestD){ bestD=d; bestI=i; }
           }
-          if (bestD < 220) creator.timeline.splice(bestI,1);
+          if(bestD<220) creator.timeline.splice(bestI,1);
           renderMenu();
           return;
         }
 
-        const tool = creator.tool;
-        const base = { t: Math.max(0,t) };
+        const tool=creator.tool;
+        const base={ t: Math.max(0,t) };
 
-        if (tool==="spike") creator.timeline.push({ ...base, type:"spike", dir: creator.dir, w:34, h:34 });
-        else if (tool==="pad") creator.timeline.push({ ...base, type:"pad", w:52, h:18 });
-        else if (tool==="orb") creator.timeline.push({ ...base, type:"orb", w:30, h:30, yOff:-150 });
-        else if (tool==="saw") creator.timeline.push({ ...base, type:"saw", r:22, yOff:-120 });
-        else if (tool==="block") creator.timeline.push({ ...base, type:"block", w:120, h:60, baseOff:0 });
-        else if (tool==="mblock") creator.timeline.push({ ...base, type:"mblock", w:120, h:60, baseOff:-10, amp:100, period:520, phase:0 });
-        else creator.timeline.push({ ...base, type:tool, w:42, h:150 });
+        if(tool==="spike") creator.timeline.push({ ...base, type:"spike", dir:creator.dir, w:34, h:34 });
+        else if(tool==="pad") creator.timeline.push({ ...base, type:"pad" });
+        else if(tool==="hpad") creator.timeline.push({ ...base, type:"hpad" });
+        else if(tool==="orb") creator.timeline.push({ ...base, type:"orb", yOff:-150 });
+        else if(tool==="saw") creator.timeline.push({ ...base, type:"saw", r:20, yOff:-130 });
+        else if(tool==="block") creator.timeline.push({ ...base, type:"block", w:120, h:60, baseOff:0 });
+        else if(tool==="mblock") creator.timeline.push({ ...base, type:"mblock", w:120, h:60, baseOff:-10, amp:70, period:650, phase:0 });
+        else creator.timeline.push({ ...base, type:tool });
 
         creator.timeline.sort((a,b)=>a.t-b.t);
         renderMenu();
       };
 
-      // save row
-      const saveRow = document.createElement("div");
-      saveRow.className = "row2";
+      const saveRow=document.createElement("div");
+      saveRow.className="row2";
       box.appendChild(saveRow);
 
-      const nameIn = document.createElement("input");
-      nameIn.placeholder = "Custom level name";
+      const nameIn=document.createElement("input");
+      nameIn.placeholder="Custom level name";
       saveRow.appendChild(nameIn);
 
-      const saveBtn = document.createElement("button");
-      saveBtn.className = "smallBtn primary";
-      saveBtn.textContent = "Save Level";
-      saveBtn.onclick = ()=>{
-        const nm = (nameIn.value || "Untitled").trim();
-        const cleaned = creator.timeline.map(o=>({...o}));
-        customLevels.push({ name:nm, timeline: cleaned, len: creator.len, speed: creator.speed });
+      const saveBtn=document.createElement("button");
+      saveBtn.className="smallBtn primary";
+      saveBtn.textContent="Save Level";
+      saveBtn.onclick=()=>{
+        const nm=(nameIn.value||"Untitled").trim();
+        customLevels.push({ name:nm, timeline: creator.timeline.map(o=>({...o})), len: creator.len, speed: creator.speed });
         saveCustomLevels();
-        selectedCustomIndex = customLevels.length-1;
+        selectedCustomIndex=customLevels.length-1;
         setTab("levels");
       };
       saveRow.appendChild(saveBtn);
 
-      const row2 = document.createElement("div");
-      row2.className = "btnRow";
+      const row2=document.createElement("div");
+      row2.className="btnRow";
       box.appendChild(row2);
 
-      const clear = document.createElement("button");
-      clear.className = "smallBtn";
-      clear.textContent = "Clear";
-      clear.onclick = ()=>{ creator.timeline = []; renderMenu(); };
+      const clear=document.createElement("button");
+      clear.className="smallBtn";
+      clear.textContent="Clear";
+      clear.onclick=()=>{ creator.timeline=[]; renderMenu(); };
       row2.appendChild(clear);
 
-      const starter = document.createElement("button");
-      starter.className = "smallBtn";
-      starter.textContent = "Starter Pattern";
-      starter.onclick = ()=>{
-        creator.timeline = [
-          {t: 900, type:"spike", dir:1, w:34, h:34},
-          {t: 1500, type:"pad", w:52, h:18},
-          {t: 2100, type:"mblock", w:120, h:60, baseOff:-10, amp:100, period:520, phase:0},
-          {t: 2750, type:"saw", r:22, yOff:-120},
-          {t: 3400, type:"portalUFO", w:42, h:150},
-          {t: 4200, type:"portalCube", w:42, h:150},
+      const starter=document.createElement("button");
+      starter.className="smallBtn";
+      starter.textContent="Starter Pattern";
+      starter.onclick=()=>{
+        creator.timeline=[
+          {t: 900, type:"spike", dir:1},
+          {t: 1500, type:"pad"},
+          {t: 2300, type:"hpad"},
+          {t: 3200, type:"orb", yOff:-150},
+          {t: 4100, type:"portalUFO"},
+          {t: 5200, type:"portalCube"},
         ];
         renderMenu();
       };
@@ -1819,59 +1541,45 @@
     }
   }
 
-  // ===================== INPUT EVENTS =====================
-  window.addEventListener("keydown", (e)=>{
-    if (e.code === "Escape"){
-      backToMenu();
-      return;
-    }
-    if (inMenu) return;
+  // ===================== INPUT =====================
+  addEventListener("keydown",(e)=>{
+    if(e.code==="Escape"){ backToMenu(); return; }
+    if(inMenu) return;
 
-    if (e.code === "Space" || e.code === "ArrowUp"){
-      if (dead || won){ resetRun(); return; }
-      if (!hold) doAction();
-      hold = true;
+    if(e.code==="Space" || e.code==="ArrowUp"){
+      if(dead || won){ resetRun(); return; }
+      if(!hold) doAction();
+      hold=true;
     }
-    if (e.code === "KeyR"){
-      resetRun();
-    }
-  }, {passive:true});
-
-  window.addEventListener("keyup", (e)=>{
-    if (e.code === "Space" || e.code === "ArrowUp") hold = false;
-  }, {passive:true});
+    if(e.code==="KeyR"){ resetRun(); }
+  },{passive:true});
+  addEventListener("keyup",(e)=>{ if(e.code==="Space"||e.code==="ArrowUp") hold=false; },{passive:true});
 
   canvas.addEventListener("mousedown", ()=>{
-    if (inMenu) return;
-    if (dead || won){ resetRun(); return; }
-    doAction();
-    hold = true;
+    if(inMenu) return;
+    if(dead || won){ resetRun(); return; }
+    doAction(); hold=true;
   });
-  window.addEventListener("mouseup", ()=>{ hold = false; });
+  addEventListener("mouseup", ()=>{ hold=false; });
 
-  canvas.addEventListener("touchstart", (e)=>{
+  canvas.addEventListener("touchstart",(e)=>{
     e.preventDefault();
-    if (inMenu) return;
-    if (dead || won){ resetRun(); return; }
-    doAction();
-    hold = true;
-  }, {passive:false});
+    if(inMenu) return;
+    if(dead || won){ resetRun(); return; }
+    doAction(); hold=true;
+  },{passive:false});
+  addEventListener("touchend", ()=>{ hold=false; },{passive:true});
 
-  window.addEventListener("touchend", ()=>{ hold = false; }, {passive:true});
+  canvas.addEventListener("click",(e)=>{
+    if(inMenu) return;
+    if(!ui.menuBtn) return;
 
-  // click menu button inside game
-  canvas.addEventListener("click", (e)=>{
-    if (inMenu) return;
-    if (!ui.menuBtn) return;
+    const rect=canvas.getBoundingClientRect();
+    const x=(e.clientX-rect.left)*(CSSW/rect.width);
+    const y=(e.clientY-rect.top)*(CSSH/rect.height);
 
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (CSSW / rect.width);
-    const y = (e.clientY - rect.top) * (CSSH / rect.height);
-
-    const b = ui.menuBtn;
-    if (x>=b.x && x<=b.x+b.w && y>=b.y && y<=b.y+b.h){
-      backToMenu();
-    }
+    const b=ui.menuBtn;
+    if(x>=b.x && x<=b.x+b.w && y>=b.y && y<=b.y+b.h) backToMenu();
   });
 
   // ===================== LOOP =====================
@@ -1885,15 +1593,14 @@
   regenDecor();
   setTab("levels");
   showMenu();
-  inMenu = true;
-  paused = true;
-  running = false;
+  inMenu=true; paused=true; running=false;
 
-  // start preview level in background
-  setLevel("easy");
+  // show first level theme in background
+  setLevelByIndex(0);
 
   loop();
 })();
 </script>
 </body>
 </html>
+
