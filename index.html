@@ -35,6 +35,11 @@
       position: fixed; inset: 0; display:grid; place-items:center;
       background: radial-gradient(1100px 700px at 50% 0%, rgba(0,255,190,0.12), rgba(0,0,0,0.86));
       backdrop-filter: blur(8px);
+      z-index: 10;
+      pointer-events: auto;
+    }
+    #gameWrap{
+      z-index: 1;
     }
    .panel{
   width: min(1180px, 96vw);
@@ -161,7 +166,7 @@
   </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="gameWrap">
   <canvas id="game"></canvas>
   <div class="hudHint" id="hint">
     Controls: <b>Space</b>/<b>↑</b>/<b>Click/Tap</b> = Jump/Flap • <b>R</b> Restart • <b>Esc</b> Menu<br/>
@@ -196,10 +201,10 @@
   // ===================== SAFE STORAGE (no SecurityError) =====================
   const memStore = {};
   const safeStorage = {
-    get(k, fallback=null){ try{ const v=localStorage.getItem(k); return (v==null)?fallback:v; }catch{ return (k in memStore)?memStore[k]:fallback; } },
-    set(k, v){ try{ localStorage.setItem(k, String(v)); }catch{ memStore[k]=String(v); } },
-    getJSON(k, fallback){ try{ const raw=safeStorage.get(k,null); if(raw==null) return fallback; return JSON.parse(raw); }catch{ return fallback; } },
-    setJSON(k, obj){ try{ safeStorage.set(k, JSON.stringify(obj)); }catch{} }
+    get(k, fallback=null){ try{ const v=localStorage.getItem(k); return (v==null)?fallback:v; }catch (err){ return (k in memStore)?memStore[k]:fallback; } },
+    set(k, v){ try{ localStorage.setItem(k, String(v)); }catch (err){ memStore[k]=String(v); } },
+    getJSON(k, fallback){ try{ const raw=safeStorage.get(k,null); if(raw==null) return fallback; return JSON.parse(raw); }catch (err){ return fallback; } },
+    setJSON(k, obj){ try{ safeStorage.set(k, JSON.stringify(obj)); }catch (err){} }
   };
 
   // ===================== CANVAS + RESPONSIVE =====================
@@ -1096,6 +1101,10 @@
   const tabCreator=document.getElementById("tabCreator");
   const contentTitle=document.getElementById("contentTitle");
   const contentBody=document.getElementById("contentBody");
+  if(!overlay || !tabLevels || !tabCustomize || !tabCreator || !contentTitle || !contentBody){
+    console.error("Menu DOM nodes missing. Check that index.html is loaded and script runs after the HTML.");
+    return;
+  }
 
   let menuTab="levels";
   function showMenu(){ overlay.style.display="grid"; }
@@ -1108,9 +1117,9 @@
     tabCreator.classList.toggle("active",which==="creator");
     renderMenu();
   }
-  tabLevels.onclick=()=>setTab("levels");
-  tabCustomize.onclick=()=>setTab("customize");
-  tabCreator.onclick=()=>setTab("creator");
+  tabLevels.addEventListener("click", ()=>setTab("levels"));
+  tabCustomize.addEventListener("click", ()=>setTab("customize"));
+  tabCreator.addEventListener("click", ()=>setTab("creator"));
 
   function mkThumb(themeName){
     const c=document.createElement("canvas");
@@ -1586,6 +1595,7 @@
   // ===================== STARTUP =====================
   regenDecor();
   setTab("levels");
+  renderMenu();
   showMenu();
   inMenu=true; paused=true; running=false;
 
@@ -1597,3 +1607,4 @@
 </script>
 </body>
 </html>
+
