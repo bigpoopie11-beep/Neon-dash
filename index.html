@@ -981,36 +981,23 @@
 
   function drawPlayer(){
     const col=colObj();
-    const cx=p.x+p.w/2, cy=p.y+p.h/2;
+    const px=p.x, py=p.y;
+
     ctx.save();
-    ctx.translate(cx,cy);
+    ctx.translate(px+p.w/2, py+p.h/2);
     ctx.rotate(p.rot);
 
-    if(mode===MODE.CUBE){
-      glow(()=>{
-        ctx.fillStyle=col.main;
-        rr(-p.w/2,-p.h/2,p.w,p.h,10); ctx.fill();
-        ctx.globalAlpha=0.18;
-        ctx.fillStyle="white";
-        rr(-p.w/2+10,-p.h/2+10,p.w-20,p.h-20,8); ctx.fill();
-        ctx.globalAlpha=1;
-        ctx.globalAlpha=0.85;
-        ctx.fillStyle="rgba(0,0,0,0.45)";
-        rr(-10,-6,7,12,3); ctx.fill();
-        rr(  3,-6,7,12,3); ctx.fill();
-        ctx.globalAlpha=1;
-      }, col.glow, 26, 1);
-    } else {
-      const uCol="rgba(255,120,200,0.95)", uGlow="rgba(255,120,200,1)";
-      glow(()=>{
-        ctx.fillStyle=uCol;
-        rr(-p.w/2,-p.h/2+6,p.w,p.h-12,16); ctx.fill();
-        ctx.globalAlpha=0.22;
-        ctx.fillStyle="white";
-        rr(-p.w/2+10,-p.h/2+14,p.w-20,p.h-28,14); ctx.fill();
-        ctx.globalAlpha=1;
-      }, uGlow, 24, 1);
-    }
+    glow(()=>{
+      ctx.fillStyle=col.main;
+      rr(-p.w/2, -p.h/2, p.w, p.h, 10);
+      ctx.fill();
+
+      ctx.globalAlpha=0.28;
+      ctx.fillStyle="white";
+      rr(-p.w/2+6, -p.h/2+6, p.w-12, p.h-12, 8);
+      ctx.fill();
+      ctx.globalAlpha=1;
+    }, col.glow, 22, 1);
 
     ctx.restore();
   }
@@ -1018,22 +1005,18 @@
   function drawProgress(){
     const w=W();
     const pct=clamp(dist/levelLen,0,1);
-    const barW=Math.min(380,w*0.36), barH=10;
-    const x=w-barW-16, y=16;
-
+    const barW = w-32;
     ctx.save();
-    ctx.globalAlpha=0.92;
-    ctx.fillStyle="rgba(255,255,255,0.10)";
-    rr(x,y,barW,barH,8); ctx.fill();
-    glow(()=>{
-      ctx.fillStyle=theme.accent;
-      rr(x,y,Math.max(10,barW*pct),barH,8); ctx.fill();
-    }, theme.accent, 18, 0.65);
+    ctx.globalAlpha=0.75;
+    ctx.fillStyle="rgba(255,255,255,0.12)";
+    rr(16, 6, barW, 8, 6); ctx.fill();
+
+    ctx.fillStyle=colObj().main;
+    rr(16,6,barW*pct,8,6); ctx.fill();
     ctx.restore();
 
-    ctx.fillStyle="rgba(255,255,255,0.92)";
-    ctx.font="14px system-ui, Segoe UI, Arial";
-    ctx.textAlign="right";
+    ctx.fillStyle="rgba(255,255,255,0.75)";
+    ctx.font="12px system-ui, Segoe UI, Arial";
     ctx.fillText(Math.floor(pct*100)+"%", w-16, 44);
     ctx.textAlign="left";
   }
