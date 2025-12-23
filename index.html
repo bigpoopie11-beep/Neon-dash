@@ -36,17 +36,19 @@
       background: radial-gradient(1100px 700px at 50% 0%, rgba(0,255,190,0.12), rgba(0,0,0,0.86));
       backdrop-filter: blur(8px);
     }
-    .panel{
-      width: min(1180px, 96vw);
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: var(--panel);
-      box-shadow: 0 50px 160px rgba(0,0,0,0.75);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 290px 1fr;
-      min-height: min(650px, 86vh);
-    }
+   .panel{
+  width: min(1180px, 96vw);
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,0.16);
+  background: var(--panel);
+  box-shadow: 0 50px 160px rgba(0,0,0,0.75);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 290px 1fr;
+
+  height: min(650px, 86vh);
+  max-height: 86vh;
+}
     .side{
       padding: 16px;
       display: grid;
@@ -83,7 +85,15 @@
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.12);
     }
-    .content{ padding: 16px; display:grid; gap: 12px; align-content:start; }
+    .content{
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+
+  overflow-y: auto;
+  max-height: 100%;
+}
     .title{ font-weight: 950; color: rgba(255,255,255,0.92); letter-spacing: 0.06em; font-size: 16px; }
     .levelGrid{ display:grid; gap: 12px; }
     .levelTab{
