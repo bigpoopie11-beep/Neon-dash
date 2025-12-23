@@ -489,9 +489,10 @@
   function setLevelCustom(){
     const pack = customLevels[selectedCustomIndex];
     theme = THEMES.custom;
-    speed = pack?.speed ?? 4.0;
-    levelLen = pack?.len ?? 9000;
-    timeline = (pack?.timeline ?? []).map(o=>({...o}));
+    speed = (pack && typeof pack.speed === "number") ? pack.speed : 4.0;
+    levelLen = (pack && typeof pack.len === "number") ? pack.len : 9000;
+    const packTimeline = (pack && Array.isArray(pack.timeline)) ? pack.timeline : [];
+    timeline = packTimeline.map(o=>({...o}));
     levelKey = "custom_"+selectedCustomIndex;
     regenDecor();
   }
@@ -549,7 +550,7 @@
       const x = w + 260 + (e.t - dist);
 
       if(e.type==="spike"){
-        objs.push({ type:"spike", x, dir:e.dir??1, w:e.w||34, h:e.h||34 });
+        objs.push({ type:"spike", x, dir:(e.dir == null ? 1 : e.dir), w:e.w||34, h:e.h||34 });
       } else if(e.type==="block"){
         const y = groundY() - (e.h||60) + (e.baseOff||0);
         objs.push({ type:"block", x, y, w:e.w||110, h:e.h||60 });
@@ -561,9 +562,9 @@
       } else if(e.type==="hpad"){
         objs.push({ type:"hpad", x, y: groundY() - 18, w: 52, h: 18 });
       } else if(e.type==="orb"){
-        objs.push({ type:"orb", x, y: groundY() + (e.yOff??-150), w:30, h:30, used:false });
+        objs.push({ type:"orb", x, y: groundY() + (e.yOff == null ? -150 : e.yOff), w:30, h:30, used:false });
       } else if(e.type==="saw"){
-        objs.push({ type:"saw", x, y: groundY() + (e.yOff??-130), r:e.r||20, spin:0 });
+        objs.push({ type:"saw", x, y: groundY() + (e.yOff == null ? -130 : e.yOff), r:e.r||20, spin:0 });
       } else if(e.type==="portalUFO"){
         objs.push({ type:"portalUFO", x, y: groundY()-150, w:42, h:150 });
       } else if(e.type==="portalCube"){
@@ -1047,7 +1048,7 @@
     let name="CUSTOM";
     if(levelKey.startsWith("lvl")){
       const i=Number(levelKey.replace("lvl",""));
-      name = LEVELS[i]?.name || "LEVEL";
+      name = (LEVELS[i] && LEVELS[i].name) || "LEVEL";
     } else if(levelKey.startsWith("custom_")){
       name = "CUSTOM LEVEL";
     }
@@ -1613,4 +1614,3 @@
 </script>
 </body>
 </html>
-
